@@ -48,16 +48,41 @@
 
 
 \maketitle % Make the cover page
-\pagebreak 
+\pagebreak
 
 
 \section{Abstract}
 
-Lab 2
+In Part 1, the lab introduced concepts of implementing rectifiers and filters.
+It then combined a rectifier with a low-pass filter to extract the enveloope of an audio signal.
 
-\section{Section 1}
+\section{Part 1 --- Nonlinear rectifier and envelope extraction}
 
-Section 1
+\subsection{Exercise 1}
+
+\lstinputlisting{graph_rectifiers.m}
+
+\includegraphics[width=\textwidth]{exercise1.png}
+
+\subsection{Exercise 2}
+
+After running \textit{sent001.wav} through the 500 Hz low-pass filter, the audio gave a distorted, coming-from-another-room sound:
+
+\lstinputlisting{low_pass_filter.m}
+
+\includegraphics[width=\textwidth]{exercise2.png}
+
+\subsection{Exercise 3}
+
+\lstinputlisting{high_pass_filter.m}
+
+\includegraphics[width=\textwidth]{exercise3.png}
+
+\subsection{Exercise 4}
+
+\lstinputlisting{rectifier_envelope.m}
+
+\includegraphics[width=\textwidth]{exercise4.png}
 
 
 Example with nested code.
@@ -84,6 +109,8 @@ Example with included code and image.
 
 \section{Conclusion}
 
-Lab 2 Conclusion
+Within Part 1, Exercise 1 demonstrated the use of \textit{abs()} to create a full rectifier, and \textit{max()} to create a half rectifier.
+Exercises 2 and 3 uses \textit{butter()} and the Nyquist frequency to create low-pass and high-pass filters at any given real cutoff frequency.
+Exercise 4 composes a full rectifier together with a low-pass filter to extract the envelope from an audio signal.
 
 \end{document}
