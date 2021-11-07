@@ -6,12 +6,18 @@ h2 =[ones(1,50)/20 zeros(1,20)];
 y2 = conv(fall, h2);
 
 %plotting
-layout = tiledlayout(3,1);
+layout = tiledlayout(4,1);
 title(layout, "Exercise 5");
 
 nexttile
-plot([h2 zeros(1, length(y2) - length(h2))]);
+plot(h2);
 title("h(t)");
+ylabel("amplitude");
+xlabel ("time");
+
+nexttile
+plot([h2 zeros(1, length(y2) - length(h2))]);
+title("h(t) with same time scale as output");
 ylabel("amplitude");
 xlabel ("time");
 

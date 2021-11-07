@@ -53,8 +53,9 @@
 
 \section{Abstract}
 
-In Part 1, the lab introduced concepts of implementing rectifiers and filters.
-It then combined a rectifier with a low-pass filter to extract the envelope of an audio signal.
+The lab introduces the concepts of rectifiers, filters, and convolutions.
+A rectifier is combined with a low-pass filter to extract the envelope of an audio signal.
+And a signal is convolved to filter out high frequencies.
 
 \section{Part 1 --- Nonlinear rectifier and envelope extraction}
 
@@ -84,14 +85,105 @@ After running \textit{sent001.wav} through the 500 Hz low-pass filter, the audio
 
 \includegraphics[width=\textwidth]{exercise4.png}
 
-\pagebreak
 
-\section{Part 2}
+% =================================================
+% PART 2
+% =================================================
+\pagebreak
+\section{Part 2 --- Convolution}
+
+\subsection{Convolution Demo}
+
+It seems there is a copy of the $x(t)$ in the output for every 1 in $h(t)$.
+If the coefficient in $x(t)$ is not one, then the output copy will be scaled by the coefficient.\\
+
+Thus, when the second coefficient is changed from 0.5 to -0.5, the corresponding echo in the output was reflected across the x-axis.
+Please compare the two images below.\\
+
+\lstinputlisting{convolution.m}
+
+In this image, the coefficient of $h(t)$ is 0.5.\\
+
+\includegraphics[scale=0.7]{convolution.png}
+
+In this image, the coefficient of $h(t)$ is -0.5 which caused the second echo of the input to be reflected across the x-axis.\\
+
+\includegraphics[scale=0.7]{neg_convolution.png}
+
+\subsection{Exercise 5}
+
+The convolved signal sounded much quieter and weaker.
+It sounded muffled and masked: quieter and somewhat dull.
+Apparently, this impulse response acts as filter so that may be why.\\
+
+\lstinputlisting{exercise5.m}
+
+\includegraphics[width=\textwidth]{exercise5.png}
+
+\pagebreak
+\subsection{Exercise 6}
+
+The convolution output really looks smoother (and missing data).
+It never goes below zero and the range of the output is around (0.39,0.55) compared to the input's greater range of (-1,1).\\
+
+\lstinputlisting{exercise6.m}
+
+\includegraphics[scale=0.6]{exercise6.png}
+
+\subsection{Exercise 7}
+
+\lstinputlisting{exercise7.m}
+
+\includegraphics[width=\textwidth]{exercise7.png}
+
+\subsection{Exercise 8}
+
+Yes, the difference between the three signals is only the slope of the rising and falling portions of the box.
+It seems the plot function draws points on the graph and then it connects the points with straight lines.\\
+
+Since the data instantaneously rose, the slope is rise over the step width: the smaller the step, the more steep the edges.
+It has hard to visually notice any difference when the step size is less than 0.01, though.\\
+
+\lstinputlisting{boxtscript.m}
+
+\pagebreak
+\subsection{Exercise 9}
+
+Here are the box plots from exercise 8.
+
+\includegraphics[width=\textwidth]{exercise8.png}
+
+\subsection{Exercise 10}
+
+In this exercise, the output had to be multiplied by the step size to get correct output values.
+This is because the convolve function was designed to work with discrete data so when two numbers are multiplied the width is assumed to be one and so the area is assumed to be value of the multiplication.\\
+
+In our case, we are representing a continuos signal in a discrete array.
+So while the indices are of size 1, the step size (width) is only 0.001.
+So the output must be multiplied by the step size to correct the signal.
+If this correction was not in place, the output would go up to 2000.\\
+
+The output takes 2 seconds (-1,1) to rise from 0 to 2.
+This closely matches the theory.
+The output then remains at 2 for (1,3) and decreases to 0 again during (3,5).
+Again, this matches the theory.\\
+
+Through visual inspection, the function behaves exactly as the theory when the granulation is small enough and the step size is accounted for.
+If we zoom into the plot, we will find that it doesn't rise at exactly -1 and some other inconsistencies.
+However, these inconsistencies can be mitigated by increasing the granulariy (smaller steps).\\ 
+
+\lstinputlisting{exercise10.m}
+
+\includegraphics[width=\textwidth]{exercise10.png}
 
 \section{Conclusion}
 
-Within Part 1, Exercise 1 demonstrated the use of \textit{abs()} to create a full rectifier, and \textit{max()} to create a half rectifier.
-Exercises 2 and 3 uses \textit{butter()} and the Nyquist frequency to create low-pass and high-pass filters at any given real cutoff frequency.
-Exercise 4 composes a full rectifier together with a low-pass filter to extract the envelope from an audio signal.
+Exercise 1 demonstrated the use of \textit{abs()} to create a full rectifier, and \textit{max()} to create a half rectifier.
+Exercises 2 and 3 use \textit{butter()} and the Nyquist frequency to create low-pass and high-pass filters at any given real cutoff frequency.
+Exercise 4 composes a full rectifier together with a low-pass filter to extract the envelope from an audio signal.\\
+
+Exercises 5 and 6 showed how to use discrete signal convolutions in matlab and how they can be used as signal filters.
+Exercises 7, 8, and 9 demonstrated how to make box signals in matlab and how to make the edges of the signals as steep as possible.
+Exercise 10 demonstrated how to convolve continous signals even though they are discrete signals in matlab.\\
 
 \end{document}
