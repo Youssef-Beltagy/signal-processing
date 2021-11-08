@@ -15,26 +15,26 @@ title(layout, "Exercise 5");
 nexttile
 plot(h2);
 title("h(t)");
-ylabel("amplitude");
-xlabel ("time");
+xlabel('Time (s)');
+ylabel('Amplitude');
 
 nexttile
 plot([h2 zeros(1, length(y2) - length(h2))]);
 title("h(t) with same time scale as output");
-ylabel("amplitude");
-xlabel ("time");
+xlabel('Time (s)');
+ylabel('Amplitude');
 
 nexttile
 plot([fall zeros(1, length(y2) - length(fall))])
 title("fall")
-ylabel("amplitude");
-xlabel ("time");
+xlabel('Time (s)');
+ylabel('Amplitude');
 
 nexttile
 plot(y2)
 title("conv(fall,h)")
-ylabel("amplitude");
-xlabel ("time");
+xlabel('Time (s)');
+ylabel('Amplitude');
 
 % Play the sounds 
 sound(fall);

@@ -15,13 +15,13 @@ title(layout, "Exercise 6");
 nexttile
 plot(6400:6500, fall(6400:6500));
 title("fall (zoomed in)");
-ylabel("amplitude");
-xlabel ("time");
+xlabel('Time (s)');
+ylabel('Amplitude');
 
 nexttile
 plot(6400:6500, y2(6400:6500));
 title("conv(fall,h) (zoomed in)")
-ylabel("amplitude");
-xlabel ("time");
+xlabel('Time (s)');
+ylabel('Amplitude');
 
 

@@ -27,17 +27,17 @@ title(layout, "Exercise 10");
 nexttile
 plot(t, h);
 title("h(t)");
-ylabel("amplitude");
-xlabel ("time");
+xlabel('Time (s)');
+ylabel('Amplitude');
 
 nexttile
 plot(t,x)
 title("x(t)")
-ylabel("amplitude");
-xlabel ("time");
+xlabel('Time (s)');
+ylabel('Amplitude');
 
 nexttile
 plot(2*st:del:2*ed,y)
 title("conv(x,h)")
-ylabel("amplitude");
-xlabel ("time");
+xlabel('Time (s)');
+ylabel('Amplitude');
