@@ -17,7 +17,6 @@ pause(4);
 sound(full_rectified_signal, Fs);
 pause(4);
 sound(half_rectified_signal, Fs);
-pause(4);
 
 % Graph t=0.2 to t=0.3
 t = t(0.2*Fs:0.3*Fs);
