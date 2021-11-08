@@ -77,13 +77,13 @@ The filtered signal looks smoother than the original signal.\\
 
 \lstinputlisting{low_pass_filter.m}
 
-\includegraphics[width=\textwidth]{exercise2.png}
+\includegraphics[scale=0.7]{exercise2.png}
 
 Here is the magnitude and phase response of the filter.
 As you can see, the filter assigns more weight to lower frequencies.
 But high frequencies are attenuated.\\
 
-\includegraphics[width=\textwidth]{low_pass_filter_response.png}
+\includegraphics[scale=0.7]{low_pass_filter_response.png}
 
 \pagebreak
 \subsection{Exercise 3}
@@ -96,13 +96,13 @@ The filtered signal looks noisier than the original signal.\\
 
 \lstinputlisting{high_pass_filter.m}
 
-\includegraphics[width=\textwidth]{exercise3.png}
+\includegraphics[scale=0.7]{exercise3.png}
 
 
 Here is the magnitude and phase response of the filter.
 As you can see, the filter assigns more weight to higher frequencies and attenuates lower frequencies.\\
 
-\includegraphics[width=\textwidth]{high_pass_filter.png}
+\includegraphics[scale=0.7]{high_pass_filter.png}
 
 \subsection{Exercise 4}
 
@@ -118,6 +118,8 @@ We couldn't hear the 5, 20, and 50 Hz envelopes but the 500 Hz one sounded like 
 \lstinputlisting{rectifier_envelope.m}
 
 \includegraphics[width=\textwidth]{exercise4.png}
+
+\includegraphics[width=\textwidth]{exercise4_5,50,500.png}
 
 
 % =================================================
@@ -136,18 +138,17 @@ Please compare the two images below.\\
 
 \lstinputlisting{convolution.m}
 
-In this image, the coefficient of $h(t)$ is 0.5.\\
+In this image, the second coefficient of $h(t)$ is 0.5.\\
 
 \includegraphics[scale=0.7]{convolution.png}
 
-In this image, the coefficient of $h(t)$ is -0.5 which caused the second echo of the input to be reflected across the x-axis.\\
+In this image, the second coefficient of $h(t)$ is -0.5 which caused the second echo of the input to be reflected across the x-axis.\\
 
 \includegraphics[scale=0.7]{neg_convolution.png}
 
 \subsection{Exercise 5}
 
-The convolved signal sounded much quieter and weaker.
-It sounded muffled and masked: quieter and somewhat dull.
+The convolved signal sounded muffled and masked: quieter and somewhat dull.
 Apparently, this impulse response acts as filter so that may be why.\\
 
 \lstinputlisting{exercise5.m}
@@ -158,11 +159,12 @@ Apparently, this impulse response acts as filter so that may be why.\\
 \subsection{Exercise 6}
 
 The convolution output really looks smoother (and missing data).
+It has shallower edges.
 It never goes below zero and the range of the output is around (0.39,0.55) compared to the input's greater range of (-1,1).\\
 
 \lstinputlisting{exercise6.m}
 
-\includegraphics[scale=0.6]{exercise6.png}
+\includegraphics[width=\textwidth]{exercise6.png}
 
 \subsection{Exercise 7}
 
@@ -175,8 +177,8 @@ It never goes below zero and the range of the output is around (0.39,0.55) compa
 Yes, the difference between the three signals is only the slope of the rising and falling portions of the box.
 It seems the plot function draws points on the graph and then it connects the points with straight lines.\\
 
-Since the data instantaneously rose, the slope is rise over the step width: the smaller the step, the more steep the edges.
-It has hard to visually notice any difference when the step size is less than 0.01, though.\\
+Since the data instantaneously rose, the slope is the rise over the step width: the smaller the step, the more steep the edges.
+It is hard to visually notice any difference when the step size is less than 0.01, though.\\
 
 \lstinputlisting{boxtscript.m}
 
