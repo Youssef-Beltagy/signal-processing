@@ -1,4 +1,7 @@
-% Exercise 6
+% Youssef Beltagy
+% BEE235A, Au 2021, Lab 2
+% exercise6.m - Zoom into convolved signal
+
 load fall
 
 fall = fall'; % convert fall into a row vector

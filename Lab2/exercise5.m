@@ -1,4 +1,7 @@
-% Exercise 5
+% Youssef Beltagy
+% BEE235A, Au 2021, Lab 2
+% exercise5.m - Convolving fall
+
 load fall
 
 fall = fall'; % convert fall into a row vector

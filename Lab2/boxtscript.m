@@ -1,4 +1,7 @@
-% Exercise 8
+% Youssef Beltagy
+% BEE235A, Au 2021, Lab 2
+% boxtscript.m - boxplots with different time granularities
+
 t05 = -3:0.5:3;
 boxsig05 = boxt(t05,-1,1);
 

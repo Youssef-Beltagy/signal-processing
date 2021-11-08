@@ -61,25 +61,59 @@ And a signal is convolved to filter out high frequencies.
 
 \subsection{Exercise 1}
 
+The fully rectified signal sounded like a duck. There was a weird ringing sound at the end too.\\
+
+The half rectified signal sounded a little weird, but not too abnormal.\\
+
 \lstinputlisting{graph_rectifiers.m}
 
-\includegraphics[width=\textwidth]{exercise1.png}
+\includegraphics[scale=0.7]{exercise1.png}
 
 \subsection{Exercise 2}
 
-After running \textit{sent001.wav} through the 500 Hz low-pass filter, the audio gave a distorted, coming-from-another-room sound:
+After running \textit{sent001.wav} through the 500 Hz low-pass filter, the audio gave a distorted, coming-from-another-room sound.\\
+
+The filtered signal looks smoother than the original signal.\\
 
 \lstinputlisting{low_pass_filter.m}
 
 \includegraphics[width=\textwidth]{exercise2.png}
 
+Here is the magnitude and phase response of the filter.
+As you can see, the filter assigns more weight to lower frequencies.
+But high frequencies are attenuated.\\
+
+\includegraphics[width=\textwidth]{low_pass_filter_response.png}
+
+\pagebreak
 \subsection{Exercise 3}
+
+The high-pass filtered signal sounded quiet but very sharp.
+It was as if someone was whispering while stressing all s.\\
+
+The filtered signal looks noisier than the original signal.\\
+
 
 \lstinputlisting{high_pass_filter.m}
 
 \includegraphics[width=\textwidth]{exercise3.png}
 
+
+Here is the magnitude and phase response of the filter.
+As you can see, the filter assigns more weight to higher frequencies and attenuates lower frequencies.\\
+
+\includegraphics[width=\textwidth]{high_pass_filter.png}
+
 \subsection{Exercise 4}
+
+The lower the frequency cutoff the smoother the envelope and vice versa.\\
+
+We used full-rectification.
+This means that though we used 20 Hz for our filter, we might be cutting off frequencies that are bigger than 10 but less than 20.
+As you know, full-rectification can cause the frequency of some signals to be doubled.
+This would cause frequencies that are originally in the range of [10,20] to be in the range of [20,40] and be attenuated.\\
+
+We couldn't hear the 5, 20, and 50 Hz envelopes but the 500 Hz one sounded like a movie alien.\\
 
 \lstinputlisting{rectifier_envelope.m}
 
