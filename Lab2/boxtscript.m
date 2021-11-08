@@ -18,18 +18,18 @@ title(layout, "Box Plots");
 nexttile
 plot(t05, boxsig05);
 title("Boxplot with 0.5s granularity");
-ylabel("amplitude");
-xlabel ("time");
+xlabel('Time (s)');
+ylabel('Amplitude');
 
 nexttile
 plot(t01, boxsig01);
 title("Boxplot with 0.1s granularity");
-ylabel("amplitude");
-xlabel ("time");
+xlabel('Time (s)');
+ylabel('Amplitude');
 
 nexttile
 plot(t001, boxsig001);
 title("Boxplot with 0.01s granularity");
-ylabel("amplitude");
-xlabel ("time");
+xlabel('Time (s)');
+ylabel('Amplitude');
 
