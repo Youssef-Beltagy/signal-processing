@@ -1,3 +1,6 @@
+% Youssef Beltagy
+% BEE235A, Au 2021, Lab 2
+% exercise10.m - Convoluting two box plots
 
 % Time Signal Parameters
 del = 0.001;

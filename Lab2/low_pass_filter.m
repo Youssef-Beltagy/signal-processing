@@ -2,13 +2,23 @@
 % BEE235A, Au 2021, Lab 2
 % low_pass_filter.m - graph sent001.wav through a LPF
 
+function low_pass_filter()
+
 [signal, Fs] = audioread('sent001.wav');
 [bb, aa] = butter(2, 500/(Fs/2)); % 2nd-order LPF @ 500 Hz
 filtered_signal = filter(bb, aa, signal);
 
+% Analyze the filter
+fvtool(bb,aa);
+
+% play the sounds
+sound(signal, Fs);
+pause(4);
+sound(filtered_signal, Fs);
+
 L = length(signal);
 Ts = 1 / Fs;
-t = [0:Ts:(L-1)*Ts];
+t = 0:Ts:(L-1)*Ts;
 
 % Slice for graphing for t=0.2 to t=0.3
 t = t(0.2*Fs:0.3*Fs);
@@ -28,3 +38,5 @@ plot(t, filtered_signal);
 title('sent001.wav, low-pass filter @ 500 Hz');
 xlabel('Time');
 ylabel('Amplitude');
+
+end

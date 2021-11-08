@@ -9,7 +9,15 @@ half_rectified_signal = max(0, signal);
 
 L = length(signal);
 Ts = 1 / Fs;
-t = [0:Ts:(L-1)*Ts];
+t = 0:Ts:(L-1)*Ts;
+
+% Play the sounds
+sound(signal, Fs);
+pause(4);
+sound(full_rectified_signal, Fs);
+pause(4);
+sound(half_rectified_signal, Fs);
+pause(4);
 
 % Graph t=0.2 to t=0.3
 t = t(0.2*Fs:0.3*Fs);
@@ -37,4 +45,5 @@ plot(t, half_rectified_signal);
 title('sent001.wav, half-rectified');
 xlabel('Time');
 ylabel('Amplitude');
+
 
