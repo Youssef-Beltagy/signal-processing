@@ -56,9 +56,14 @@
 
 \section{Abstract}
 
+
 Part 1 of this lab introduces the concept of additive synthesis.
 We load a pre-recorded trumpet sound signal, and apply a Fourier transform to find the magnitudes and frequencies of 10 peak harmonics.
 We then take these values to sum together 10 sine functions, synthesizing a new sound signal that sounds like the pre-recorded sample.
+
+
+We experiment with fourier series signal synthesis and
+observe the limitations of this technique.
 
 % =================================================
 % PART 1
@@ -141,7 +146,53 @@ The main difference is that the synthesized signal has zero variance in tone.
 % PART 2
 % =================================================
 \pagebreak
-\section{Part 2 --- Description}
+\section{Part 2 --- Fourier Series Approximation of a Square Wave}
+
+In this section, we synthesized a square wave signal using a fourier series.
+When the number of coefficients is low, the synthesized signal displays the Gibbs
+phenomenon where the signal overshoots and undershoots at sharp transitions.
+
+\subsection{C\_k Phase and Magnitude}
+
+We generated and plotted the C\_k coefficients of the fourier series
+we used to synthesize the square wave.\\
+
+Below you can see the magnitudes and phases of the coefficients.
+
+\includegraphics[width=\textwidth]{ck_values.png}
+
+\lstinputlisting{gibbs.m}
+
+\subsection{Square Wave Synthesis}
+
+We developed a function that generates an approximation of a square wave
+given the time of the signal and the K\_{max} of the coefficients.
+
+\lstinputlisting{squarewave.m}
+
+\subsection{Square Wave Plots}
+
+We plotted the output from our synthesizing function.
+
+\includegraphics[width=\textwidth]{squarewaves.png}
+
+\lstinputlisting{squarewave_plot.m}
+
+\subsection{Gibbs Phenomenon}
+
+The plots didn't demonstrate the phenomenon enough,
+so we wrote a script to generate a video of synthesized signal
+as k\_{max} increases.
+
+\lstinputlisting{squarewave_video.m}
+
+When K\_{max} is less than 500, the Gibbs phenomenon is clear.
+The signal rings (overshoots and undershoots) at sharp transitions.\\
+
+Between K\_{max} = 400 and K\_{max} = 500, the ringing decreases.
+When K\_{max} rises above 500, the Gibbs phenomenon disappears.
+After that it appears again; then it disappears again; 
+then it appears again, and the process repeats.
 
 \section{Conclusion}
 
@@ -151,5 +202,8 @@ By summing together cosines mapping to the highest-magnitude harmonics in some s
 However, this additive synthesis process alone is not able to replicate any ``wibbly-wobbly'' sound that appears when there's a low-frequency modulation in the sample.
 The synthesized trumpet signal demonstrated this inability by having zero variance in tone that the pre-recorded signal had.
 Nonetheless, a Fourier transform can no doubt generate sound tables that can be used by synthesizers and other digital audio tools as a base for instruments and other uses for sound.
+
+In this lab, we synthesized a square wave using 
+fourier series and observed the Gibbs phenomenon.
 
 \end{document}
