@@ -56,67 +56,89 @@
 
 \section{Abstract}
 
-
-Part 1 of this lab introduces the concept of additive synthesis.
-We load a pre-recorded trumpet sound signal, and apply a Fourier transform to find the magnitudes and frequencies of 10 peak harmonics.
-We then take these values to sum together 10 sine functions, synthesizing a new sound signal that sounds like the pre-recorded sample.
-
-
-We experiment with fourier series signal synthesis and
-observe the limitations of this technique.
+In this lab, we analyze a couple of signals and synthesize them using the fourier series.
+We analyzed a trumpet sound and a square wave signal.
+We observed and recorded how synthesized signals fare compared to original ones.
 
 % =================================================
 % PART 1
 % =================================================
 \section{Part 1 --- Signal Synthesis}
 
-After loading and plotting the pre-recorded trumpet sound signal onto a graph, I measured the coordinates of two different peaks:
+In this section we analyze and synthesize a trumpet sound using fourier series.
+
+\subsection{Estimating the Fundamental Frequency}
+
+After loading and plotting the pre-recorded trumpet sound signal onto a graph, we measured the coordinates of two different peaks.
+
+\includegraphics[width=\textwidth]{trumpet_zoomedin.png}
 
 \begin{table}[H]
 	\centering
 	\begin{tabular}{cccc}\toprule
 		Peak No. 1 & Peak No. 2 & Period (\# of samples) & $F_0 (Hz) = F_s / (\textrm{\# of samples})$ \\\midrule
 
-		$X_1 = 70, Y_1 = 0.99969$ &
-		$X_2 = 112, Y_1 = 0.99969$ &
+		$X_1 = 71, Y_1 = 1.0000$ &
+		$X_2 = 113, Y_1 = 1.0000$ &
 		$|X_2-X_1| = 42$ &
 		$F_0 = 11025 / 42 = 262.5\;Hz$ \\\bottomrule
 	\end{tabular}
 	\caption{\label{tab:two-peaks}Two sampled peaks of the trumpet sound signal}
 \end{table}
 
-The difference between the two peaks were 42 samples.
-With a sample rate of $F_s = 11025\;sample*Hz$, the difference is $262.5\;Hz$.
-I then applied a Fourier transform on the trumpet signal, and measured the magnitudes and frequency of the first seven harmonic peaks:
+The difference between the two peaks is 42 samples.
+With a sample rate of $F_s = 11025\;Hz$, the difference is $262.5\;Hz$.\\
+
+We then applied the Fourier transform on the trumpet signal and measured the magnitudes and frequency of the first seven harmonic peaks.
+We also included the 0th harmonic (the integral average) for reference.
+
+\includegraphics[width=\textwidth]{trumpet_ft_first7.png}
 
 \begin{table}[H]
 	\centering
-	\begin{tabular}{rrr}\toprule
-		Harmonic & Magnitude & Frequency (Hz) \\\midrule
-
-		1 & 11.795 & 258.398 \\
-		2 & 37.749 & 538.33  \\
-		3 & 65.114 & 796.729 \\
-		4 & 52.244 & 1055.13 \\
-		5 & 59.593 & 1335.06 \\
-		6 & 38.994 & 1593.46 \\
-		7 & 28.305 & 1851.86 \\\bottomrule
+	\begin{tabular}{rrrr}\toprule
+		Harmonic & Magnitude & Frequency (Hz) & Frequency Diff (Hz)\\\midrule
+		0 & 15.944 & 0  & N/A \\
+		1 & 11.795 & 258.398 & 258.398 \\
+		2 & 37.749 & 538.330 & 279.932 \\
+		3 & 65.114 & 796.729 & 258.399 \\
+		4 & 52.244 & 1055.13 & 258.40 \\
+		5 & 52.593 & 1335.06 & 279.93 \\
+		6 & 38.994 & 1593.46 & 258.40 \\
+		7 & 28.305 & 1851.86 & 258.40 \\\bottomrule
 	\end{tabular}
 	\caption{\label{tab:first-harmonics}7 first harmoncs}
 \end{table}
 
-The differences of these peaks were 279.93, 258.40, 258.40, 279.93, 261.40, and 258.40 Hz.
-The mean of these differences is 265.93 Hz (1.3\% difference), and the median of these differences is 258.40 Hz (1.6\% difference), so the data aligns well with the difference of peaks I measured previously.
+The mean of these differences is $F_0 \; = \; 264.55$ Hz and the median of these differences is 258.40 Hz.
+The percent differences compared to our first estimation of 262.5 Hz is 0.78\% and 1.6\% for the mean and median respectively.
+The percent differences are small so the mean and median align well with our first estimate.\\
 
-To synthesize a new trumpet signal, I recorded the 10 strongest (in magnitude) harmonic peaks:
+The harmonics all have frequencies which are multiples of $F_0 \; = \; 264.55$ Hz (approximately).
+So the average difference between two harmonics is 264.55. It seems musical sounds are
+made of multiple harmonics and not just one.\\
+
+Here is the code used in analysis.
+
+\begin{framed}
+	\lstinputlisting{signal_synthesis_plot.m}
+\end{framed}
+
+\subsection{Signal Synthesis}
+
+To synthesize a new trumpet signal, we recorded the 10 strongest (in magnitude) harmonic peaks.
+We ignored the 0th harmonic (when the frequency is 0 Hz) because it will just make the sound louder 
+without making it more intelligible and matlab will attenuate the larger magnitude.
+We did try adding the 0th harmonic, but it didn't make the sound any better.
+
+\includegraphics[width=\textwidth]{trumpet_ft_strongest10.png}
 
 \begin{table}[H]
 	\centering
 	\begin{tabular}{c c c}\toprule
 		Peak & Magnitude & Frequency (Hz) \\\midrule
-
 		 1 & 65.114 & 796.729 \\
-		 2 & 59.593 & 1335.06 \\
+		 2 & 52.593 & 1335.06 \\
 		 3 & 52.244 & 1055.13 \\
 		 4 & 38.994 & 1593.46 \\
 		 5 & 37.749 & 538.33  \\
@@ -129,18 +151,46 @@ To synthesize a new trumpet signal, I recorded the 10 strongest (in magnitude) h
 	\caption{\label{tab:strongest-harmonics}10 strongest harmonic peaks}
 \end{table}
 
-I then created a matlab script that summed up 10 sine waves into a $2*F_s$-long vector to synthesize a 2-second long trumpet signal:
+We then created a matlab script that summed up 10 sine waves into a $2*F_s$-long vector to synthesize a 2-second long trumpet signal.\\
+
+The synthesized signal sounded much like the pre-recorded trumpet signal
+but had zero variance in tone.
+The synthesized signal sounded monotonic and had a weird ringing sound.
+The synthesized signal may sound better if more harmonics are added.\\
+
+Below is the synthesized signal. It is periodic and doesn't have any variation.
+It still has a sinusoidal form.
+
+% Synthesis output
+\includegraphics[width=\textwidth]{signal_synthesis.png}
+
+Compared to the original signal, the synthesized signal is missing components.
+The synthesized signal seems to mostly contain the dense central part of the original
+which you can see in the image below. The other frequencies are truncated.
+
+\includegraphics[width=\textwidth]{trumpet_signal_comparison.png}
+
+When we zoomed into the signals, it is clear the two signals are not in phase.
+This is because we only used the magnitudes of the coefficients for the fourier series
+and didn't consider the phase.\\
+
+The original signal appears smoother than the synthesized signal.
+The original signal has values in the range of [-1,1] 
+but the synthesized signal only has values in the range of [-0.5,1]. 
+The original signal has negative peaks of bigger magnitude than the synthesized signal.
+All of these points illustrate how the synthesized signal is missing most components of 
+the original. Yet, the synthesized signal is adequately similar to the original for
+us to identify it.
+
+
+\includegraphics[width=\textwidth]{trumpet_signal_comparison_(zoomed in).png}
+
 
 % Synthesis code
 \begin{framed}
-	\lstinputlisting[caption=Signal synthesis code]{signal_synthesis.m}
+	\lstinputlisting{signal_synthesis.m}
 \end{framed}
 
-% Synthesis output
-\includegraphics[scale=1.0]{signal_synthesis.png}
-
-The audio generated sounded much like the pre-recorded trumpet signal.
-The main difference is that the synthesized signal has zero variance in tone.
 
 % =================================================
 % PART 2
@@ -161,30 +211,37 @@ Below you can see the magnitudes and phases of the coefficients.
 
 \includegraphics[width=\textwidth]{ck_values.png}
 
-\lstinputlisting{gibbs.m}
+\begin{framed}
+	\lstinputlisting{gibbs.m}
+\end{framed}
 
 \subsection{Square Wave Synthesis}
 
 We developed a function that generates an approximation of a square wave
 given the time of the signal and the K\_{max} of the coefficients.
 
-\lstinputlisting{squarewave.m}
+\begin{framed}
+	\lstinputlisting{squarewave.m}
+\end{framed}
 
+\pagebreak
 \subsection{Square Wave Plots}
 
 We plotted the output from our synthesizing function.
+Clearly as K\_{max} increases, the synthesized signal becomes
+more similar to the original.
 
 \includegraphics[width=\textwidth]{squarewaves.png}
 
-\lstinputlisting{squarewave_plot.m}
+\begin{framed}
+	\lstinputlisting{squarewave_plot.m}
+\end{framed}
 
 \subsection{Gibbs Phenomenon}
 
 The plots didn't demonstrate the phenomenon enough,
-so we wrote a script to generate a video of synthesized signal
-as k\_{max} increases.
-
-\lstinputlisting{squarewave_video.m}
+so we wrote a script to generate a video of the synthesized signal
+as k\_{max} increases.\\
 
 When K\_{max} is less than 500, the Gibbs phenomenon is clear.
 The signal rings (overshoots and undershoots) at sharp transitions.\\
@@ -194,16 +251,24 @@ When K\_{max} rises above 500, the Gibbs phenomenon disappears.
 After that it appears again; then it disappears again; 
 then it appears again, and the process repeats.
 
+\begin{framed}
+	\lstinputlisting{squarewave_video.m}
+\end{framed}
+
 \section{Conclusion}
 
-Part 1 demonistrated the use of the Fourier transform to assist in the synthesis of audio signals.
-By summing together cosines mapping to the highest-magnitude harmonics in some sample, I can create a function that generates a signal that roughly mimics the timbre of a sound piece.
+We used the fourier transform to analyze a trumpet sound.
+We then used the strongest harmonics of the trumpet to synthesize a trumpet sound using the fourier series.
+By summing cosines mapping to the highest-magnitude harmonics, we can generate a signal that mimics the timbre of a sound piece.\\
 
-However, this additive synthesis process alone is not able to replicate any ``wibbly-wobbly'' sound that appears when there's a low-frequency modulation in the sample.
-The synthesized trumpet signal demonstrated this inability by having zero variance in tone that the pre-recorded signal had.
-Nonetheless, a Fourier transform can no doubt generate sound tables that can be used by synthesizers and other digital audio tools as a base for instruments and other uses for sound.
+We synthesized a square wave using its fourier series coefficients and compared it to the original signal.
+Fourier series can be used to generate signals with sharp transitions.\\
 
-In this lab, we synthesized a square wave using 
-fourier series and observed the Gibbs phenomenon.
+Because the synthesized signals are truncated fourier series, they have some issues
+like the Gibbs phenomenon or imperfect representations of the signal.
+The synthesized trumpet sound has zero variance in tone and is not able to replicate any ``wibbly-wobbly'' sound that appears because of smaller frequencies in the sample.
+The square wave displayed the Gibbs Phenomenon even when hundreds of frequencies were used.\\
+
+Nonetheless, a Fourier series can generate sound tables that can be used by synthesizers and other digital audio tools as a base for instruments.
 
 \end{document}

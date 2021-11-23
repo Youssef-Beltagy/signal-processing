@@ -1,6 +1,7 @@
 % Youssef Beltagy
 % BEE235A, Aut 2021, Lab 3
-% squarewave.m - Generates a Fourier Series approximation of a square Wave
+% squarewave.m - Generates a Fourier Series 
+% approximation of a square Wave
 % given the maximum number of coefficients.
 % t is the input time (must be a row vector)
 % max_k is the maximum number of coefficients
