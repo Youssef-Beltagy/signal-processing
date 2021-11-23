@@ -1,5 +1,5 @@
 % Youssef Beltagy
-% BEE235A, Au 2021, Lab 2
+% BEE235A, Aut 2021, Lab 2
 % convolution.m - Experimenting with Matlab Convolution
 
 h = [1 zeros(1,20) .5 zeros(1,10)]; % impulses make triangles
