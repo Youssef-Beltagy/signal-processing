@@ -6,7 +6,7 @@
 \usepackage{fullpage} % Use the full page
 \usepackage{color}
 \usepackage{tikz}
-\usepackage{matlab-prettifier} % Matlab
+\usepackage[framed]{matlab-prettifier} % Matlab
 \setlength\parindent{0pt} % No indentation
 
 
@@ -24,7 +24,7 @@
   style              = Matlab-editor,
   basicstyle         = \mlttfamily,
   mlshowsectionrules = true,
-  escapeinside={//}{\^^M},
+  escapeinside={//}{//},
 }
 
 % Cover Page Settings
@@ -54,16 +54,17 @@
 
 \section{Abstract}
 
-% =================================================
-% PART 1
-% =================================================
-\section{Part 1 --- Description}
+\section{Exercise 1 --- Low Pass Filter}
 
-% =================================================
-% PART 2
-% =================================================
-\pagebreak
-\section{Part 2 --- Description}
+\lstinputlisting{SignalLowPass.m}
+
+\section{Exercise 2 --- High Pass Filter}
+
+\lstinputlisting{SignalHighPass.m}
+
+\section{Exercise 3 --- Band Pass Filter}
+
+\lstinputlisting{SignalBandPass.m}
 
 \section{Conclusion}
 
