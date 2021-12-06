@@ -1,10 +1,15 @@
-function PlaySignals(ss, os)
+% Youssef Beltagy
+% BEE235A, Aut 2021, Lab 4
+% PlaySignals - plays the two signals
+% once with sound another with soundsc
+
+function PlaySignals(ss, os, Fs)
 
 % Play the sounds
-sound(ss); pause(10);
-sound(os); pause(10);
+sound(ss, Fs); pause(8);
+sound(os, Fs); pause(8);
 
-soundsc(ss); pause(10);
-sound(os); pause(10);
+soundsc(ss, Fs); pause(8);
+soundsc(os, Fs); pause(8);
 
-end;
+end
