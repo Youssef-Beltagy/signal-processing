@@ -1,8 +1,9 @@
-function os = vocode(ss, Fs, num_bands, fmin, fmax)
+function os = vocode(ss, Fs, num_bands, mode, fmin, fmax)
    arguments
         ss(:,:);
         Fs(1,1);
         num_bands(1,1) = 8;
+        mode(1,1) = "sine";
         fmin(1,1) = 300;
         fmax(1,1) = 6000;
    end
@@ -35,7 +36,7 @@ for i=1:num_bands
     envelope = abs(band);
     envelope = filter(lpf_bb, lpf_aa, envelope); %TODO: should I half the frequency
 
-    band = sin(pi .* (cutoffs(i) + cutoffs(i+1)) .* t );
+    band = generate_carrier(mode, cutoffs(i), cutoffs(i + 1), bpf_bb, bpf_aa, t);
     band = band .* envelope;
     
     band = filter(bpf_bb, bpf_aa, band);% pass band through BPF again
@@ -52,6 +53,15 @@ if SIZE(1) > 1
     os = os';
 end
 
+end
+
+function carrier=generate_carrier(mode, fmin, fmax, bpf_bb, bpf_aa, t)
+    if (strcmp(mode,"noise"))
+        carrier = -1 + 2 .* rand(size(t));
+        carrier = filter(bpf_bb, bpf_aa, carrier);
+    else
+        carrier = sin(pi .* (fmin + fmax) .* t );
+    end
 end
 
 % Generates Frequency Cutoffs for the bands
