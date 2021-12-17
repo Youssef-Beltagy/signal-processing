@@ -1,3 +1,6 @@
+% Youssef Beltagy
+% BEE235A, Aut 2021, Vocoder Project
+% spectrogram.m - Generates Spectrograms
 
 [ss, Fs] = audioread("sounds/sent007.wav");
 make_spectrogram(ss,Fs,"Original Signal Spectrogram");

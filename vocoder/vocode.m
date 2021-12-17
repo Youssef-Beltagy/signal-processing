@@ -1,11 +1,26 @@
+% Youssef Beltagy
+% BEE235A, Aut 2021, Vocoder Project
+% vocode.m - The vocoder.
+% arguments
+%        ss(:,:); % input sound signal
+%        Fs(1,1); % signal sampling frequency
+%        num_bands(1,1) = 8; % number of input bands
+%        mode(1,1) = "sine"; % whether to use a sine wave 
+%        % or white noise as the carrier.
+%        % mode: sine, noise
+%        fmin(1,1) = 300; % minimum frequency to use in the bands.
+%        fmax(1,1) = 6000; % maximum frequency to use in the bands.
+
 function os = vocode(ss, Fs, num_bands, mode, fmin, fmax)
    arguments
-        ss(:,:);
-        Fs(1,1);
-        num_bands(1,1) = 8;
-        mode(1,1) = "sine";
-        fmin(1,1) = 300;
-        fmax(1,1) = 6000;
+        ss(:,:); % input sound signal
+        Fs(1,1); % signal sampling frequency
+        num_bands(1,1) = 8; % number of input bands
+        mode(1,1) = "sine"; % whether to use a sine wave 
+        % or white noise as the carrier.
+        % mode: sine, noise
+        fmin(1,1) = 300; % minimum frequency to use in the bands.
+        fmax(1,1) = 6000; % maximum frequency to use in the bands.
    end
 
 SIZE = size(ss);
@@ -17,25 +32,27 @@ end
 N = length(ss);
 t = ( 0:(N - 1) ) ./ Fs;
 
+% Low Pass Filter to make envelope
 [lpf_bb,lpf_aa]=butter(2,400/(Fs/2));
 
 cutoffs = bands_cutoff(fmin, fmax, num_bands);
 
 os = zeros(1, N); % output signal
 
-%TODO: Vectorize
 for i=1:num_bands
+    % Band Pass Filter
     [bpf_bb,bpf_aa]=butter(3,[cutoffs(i) cutoffs(i+1)] ./ (Fs/2));
     
-    band = filter(bpf_bb, bpf_aa, ss);% Get Band
+    % Get Band
+    band = filter(bpf_bb, bpf_aa, ss);
     
     %TODO: Delete me later
     frequency_band = band;
     
     %Generate Envelope
     envelope = abs(band);
-    envelope = filter(lpf_bb, lpf_aa, envelope); %TODO: should I half the frequency
-
+    envelope = filter(lpf_bb, lpf_aa, envelope);
+    
     band = generate_carrier(mode, cutoffs(i), cutoffs(i + 1), bpf_bb, bpf_aa, t);
     band = band .* envelope;
     
@@ -62,28 +79,6 @@ function carrier=generate_carrier(mode, fmin, fmax, bpf_bb, bpf_aa, t)
     else
         carrier = sin(pi .* (fmin + fmax) .* t );
     end
-end
-
-% Generates Frequency Cutoffs for the bands
-function fco=bands_cutoff(fmin, fmax, N)
-
-  % TODO: This "relative value" logarithmic seems
-  % meaningless to me.
-  % Investigate and possibly eliminate later.
-  xmin = log10(fmin/165.4+1)/2.1;
-  xmax = log10(fmax/165.4+1)/2.1;    %relative value
-
-  dx = (xmax-xmin)/N;
-  
-  x = xmin:dx:xmax;
-  
-  fco=zeros(1,N+1); 
-  
-for i=1:N+1
-
-fco(i)=165.4*(10^(x(i)*2.1)-1);
-
-end
 end
 
 %Plots intermediary results
