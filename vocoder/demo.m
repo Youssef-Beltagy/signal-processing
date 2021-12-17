@@ -1,3 +1,7 @@
+% Youssef Beltagy
+% BEE235A, Aut 2021, Vocoder Project
+% demo.m - Project Demo
+
 "Sine Vocoder Demo"
 
 % Runs the vocoder on the first sentence using 8 bands and 

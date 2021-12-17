@@ -45,10 +45,7 @@ for i=1:num_bands
     
     % Get Band
     band = filter(bpf_bb, bpf_aa, ss);
-    
-    %TODO: Delete me later
-    frequency_band = band;
-    
+        
     %Generate Envelope
     envelope = abs(band);
     envelope = filter(lpf_bb, lpf_aa, envelope);
@@ -57,10 +54,7 @@ for i=1:num_bands
     band = band .* envelope;
     
     band = filter(bpf_bb, bpf_aa, band);% pass band through BPF again
-    
-    %TODO: delete me later
-    %plot_fft(ss, Fs, bpf_bb, bpf_aa, frequency_band, envelope, band, cutoffs(i), cutoffs(i+1));
-        
+            
     os = os + band;
 end
 
@@ -79,63 +73,4 @@ function carrier=generate_carrier(mode, fmin, fmax, bpf_bb, bpf_aa, t)
     else
         carrier = sin(pi .* (fmin + fmax) .* t );
     end
-end
-
-%Plots intermediary results
-function plot_fft(ss,Fs,bb,aa,band_ss, envelope, result, fmin, fmax)
-
-N = length(ss);
-f = ((-N/2+1):(N/2)) .* (Fs / N);
-t = (0:(N-1)) ./ Fs;
-
-% plot
-figure();
-layout = tiledlayout(5,1);
-title(layout, sprintf("BPF for %d - %d", round(fmin), round(fmax)));
-
-nexttile
-FT_ss = fftshift(fft(ss));
-plot(f,abs(FT_ss));
-title("original signal");
-ylabel("Amplitude");
-xlabel("Frequency / Hz");
-xlim([0 5000]);
-ylim([0,200]);
-
-
-nexttile
-[H,F]=freqz(bb,aa,256,Fs); 
-plot(F,abs(H));
-title("BPF Filter");
-ylabel("Amplitude");
-xlabel("Frequency / Hz");
-xlim([0 5000]);
-ylim([0,1]);
-
-nexttile
-FT_band_ss = fftshift(fft(band_ss));
-plot(f,abs(FT_band_ss));
-title("Frequency Band (BPF result)");
-ylabel("Amplitude");
-xlabel("Frequency / Hz");
-xlim([0 5000]);
-ylim([0,200]);
-
-nexttile;
-plot(t,envelope);
-title("Envelope of Band");
-ylabel("Amplitude");
-xlabel("Time / s");
-xlim([0.2 1]);
-ylim([-0.1 0.1]);
-
-nexttile;
-plot(t,result);
-title("Band");
-ylabel("Amplitude");
-xlabel("Time / s");
-xlim([0.2 1]);
-ylim([-0.1 0.1]);
-
-
 end
