@@ -11,7 +11,7 @@
 %   vocode_run() % runs all 25 sounds and plays both original and vocoded
 %   signal
 %   vocode_run(0) same as above
-%   vocode_run(i) runs the sentence number i. i must be in range [1,25]
+%   vocode_run(i) runs the sentence number i. i must be in range [1,27]
 %   vocode_run(i,mode) mode chooses whether you play just the original
 %                       signal, just the vocoded signal, both, or both in
 %                       reverse order.
@@ -48,7 +48,7 @@ if i == 0
     [ss,Fs] = audioread_mono(n);
     play(ss, Fs, num_bands);
     end
-elseif i > 0 && i <= 25
+elseif i > 0 && i <= 27
     [ss, Fs] = audioread_mono(i);
     play(ss, Fs, num_bands, vocode_mode);
 end

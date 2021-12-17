@@ -13,7 +13,7 @@
 %   the chimera signal.
 %   chimera_run(0) same as above
 %   chimera_run(i,j) runs the chimera with sentences i and j which have to
-%   be in the range [1,25];
+%   be in the range [1,27];
 %   chimera_run(i, j, mode) mode chooses whether you play just the original
 %                       signals, just the chimera signal, all signals,
 %                       or the original and chimera signals in reverse order.
@@ -45,7 +45,7 @@ elseif(strcmp(mode,'reverse'))
     play = @play_sound_rev;
 end
 
-if (j > 25 || j < 1)
+if (j > 27 || j < 1)
     return
 end
 
@@ -57,7 +57,7 @@ if i == 0
     [sig1,Fs1] = audioread_mono(n);
     play(sig1, Fs1, sig2, Fs2, num_bands, chimera_mode);
     end
-elseif i > 0 && i <= 25
+elseif i > 0 && i <= 27
     [sig1,Fs1] = audioread_mono(i);
     play(sig1, Fs1, sig2, Fs2, num_bands, chimera_mode);
 end
