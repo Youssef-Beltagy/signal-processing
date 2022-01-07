@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="Youssef Beltagy and Samuel Hunter AUT21 BEE 235" />
+  <title> Lab 2 Report: Nonlinear Systems, Filters, and Convolution </title>
+  <style>
+    html {
+      line-height: 1.5;
+      font-family: Georgia, serif;
+      font-size: 20px;
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      word-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 1em;
+      }
+    }
+    @media print {
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, 'Lucida Console', Consolas, monospace;
+      font-size: 85%;
+      margin: 0;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      background-color: #1a1a1a;
+      border: none;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title"> <span class="smallcaps">Lab 2 Report: Nonlinear Systems, Filters, and Convolution</span> </h1>
+<p class="author"><span>Youssef Beltagy and Samuel Hunter</span><br />
+<span class="smallcaps">AUT21 BEE 235</span></p>
+</header>
+<h1 id="abstract">Abstract</h1>
+<p>The lab introduces the concepts of rectifiers, filters, and convolutions. A rectifier is combined with a low-pass filter to extract the envelope of an audio signal. And a signal is convolved to filter out high frequencies.</p>
+<h1 id="part-1-nonlinear-rectifier-and-envelope-extraction">Part 1 — Nonlinear rectifier and envelope extraction</h1>
+<h2 id="exercise-1">Exercise 1</h2>
+<p>The fully rectified signal sounded like a duck. There was a weird ringing sound at the end too.<br />
+The half rectified signal sounded a little weird, but not too abnormal.<br />
+</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode matlab"><code class="sourceCode matlab"></code></pre></div>
+<p><img src="exercise1.png" alt="image" /></p>
+<h2 id="exercise-2">Exercise 2</h2>
+<p>After running <em>sent001.wav</em> through the 500 Hz low-pass filter, the audio gave a distorted, coming-from-another-room sound.<br />
+The filtered signal looks smoother than the original signal.<br />
+</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode matlab"><code class="sourceCode matlab"></code></pre></div>
+<p><img src="exercise2.png" alt="image" /></p>
+<p>Here is the magnitude and phase response of the filter. As you can see, the filter assigns more weight to lower frequencies. But high frequencies are attenuated.<br />
+<img src="low_pass_filter_response.png" alt="image" /></p>
+<h2 id="exercise-3">Exercise 3</h2>
+<p>The high-pass filtered signal sounded quiet but very sharp. It was as if someone was whispering while stressing all s.<br />
+The filtered signal looks noisier than the original signal.<br />
+</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode matlab"><code class="sourceCode matlab"></code></pre></div>
+<p><img src="exercise3.png" alt="image" /></p>
+<p>Here is the magnitude and phase response of the filter. As you can see, the filter assigns more weight to higher frequencies and attenuates lower frequencies.<br />
+<img src="high_pass_filter.png" alt="image" /></p>
+<h2 id="exercise-4">Exercise 4</h2>
+<p>The lower the frequency cutoff the smoother the envelope and vice versa.<br />
+We used full-rectification. This means that though we used 20 Hz for our filter, we might be cutting off frequencies that are bigger than 10 but less than 20. As you know, full-rectification can cause the frequency of some signals to be doubled. This would cause frequencies that are originally in the range of [10,20] to be in the range of [20,40] and be attenuated.<br />
+We couldn’t hear the 5, 20, and 50 Hz envelopes but the 500 Hz one sounded like a movie alien.<br />
+</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode matlab"><code class="sourceCode matlab"></code></pre></div>
+<p><img src="exercise4.png" alt="image" /></p>
+<p><img src="exercise4_5,50,500.png" alt="image" /></p>
+<h1 id="part-2-convolution">Part 2 — Convolution</h1>
+<h2 id="convolution-demo">Convolution Demo</h2>
+<p>It seems there is a copy of the <span class="math inline"><em>x</em>(<em>t</em>)</span> in the output for every 1 in <span class="math inline"><em>h</em>(<em>t</em>)</span>. If the coefficient in <span class="math inline"><em>x</em>(<em>t</em>)</span> is not one, then the output copy will be scaled by the coefficient.<br />
+Thus, when the second coefficient is changed from 0.5 to -0.5, the corresponding echo in the output was reflected across the x-axis. Please compare the two images below.<br />
+</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode matlab"><code class="sourceCode matlab"></code></pre></div>
+<p>In this image, the second coefficient of <span class="math inline"><em>h</em>(<em>t</em>)</span> is 0.5.<br />
+<img src="convolution.png" alt="image" /></p>
+<p>In this image, the second coefficient of <span class="math inline"><em>h</em>(<em>t</em>)</span> is -0.5 which caused the second echo of the input to be reflected across the x-axis.<br />
+<img src="neg_convolution.png" alt="image" /></p>
+<h2 id="exercise-5">Exercise 5</h2>
+<p>The convolved signal sounded muffled and masked: quieter and somewhat dull. Apparently, this impulse response acts as filter so that may be why.<br />
+</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode matlab"><code class="sourceCode matlab"></code></pre></div>
+<p><img src="exercise5.png" alt="image" /></p>
+<h2 id="exercise-6">Exercise 6</h2>
+<p>The convolution output really looks smoother (and missing data). It has shallower edges. It never goes below zero and the range of the output is around (0.39,0.55) compared to the input’s greater range of (-1,1).<br />
+</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode matlab"><code class="sourceCode matlab"></code></pre></div>
+<p><img src="exercise6.png" alt="image" /></p>
+<h2 id="exercise-7">Exercise 7</h2>
+<div class="sourceCode" id="cb8"><pre class="sourceCode matlab"><code class="sourceCode matlab"></code></pre></div>
+<p><img src="exercise7.png" alt="image" /></p>
+<h2 id="exercise-8">Exercise 8</h2>
+<p>Yes, the difference between the three signals is only the slope of the rising and falling portions of the box. It seems the plot function draws points on the graph and then it connects the points with straight lines.<br />
+Since the data instantaneously rose, the slope is the rise over the step width: the smaller the step, the more steep the edges. It is hard to visually notice any difference when the step size is less than 0.01, though.<br />
+</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode matlab"><code class="sourceCode matlab"></code></pre></div>
+<h2 id="exercise-9">Exercise 9</h2>
+<p>Here are the box plots from exercise 8.</p>
+<p><img src="exercise8.png" alt="image" /></p>
+<h2 id="exercise-10">Exercise 10</h2>
+<p>In this exercise, the output had to be multiplied by the step size to get correct output values. This is because the convolve function was designed to work with discrete data so when two numbers are multiplied the width is assumed to be one and so the area is assumed to be value of the multiplication.<br />
+In our case, we are representing a continuos signal in a discrete array. So while the indices are of size 1, the step size (width) is only 0.001. So the output must be multiplied by the step size to correct the signal. If this correction was not in place, the output would go up to 2000.<br />
+The output takes 2 seconds (-1,1) to rise from 0 to 2. This closely matches the theory. The output then remains at 2 for (1,3) and decreases to 0 again during (3,5). Again, this matches the theory.<br />
+Through visual inspection, the function behaves exactly as the theory when the granulation is small enough and the step size is accounted for. If we zoom into the plot, we will find that it doesn’t rise at exactly -1 and some other inconsistencies. However, these inconsistencies can be mitigated by increasing the granulariy (smaller steps).<br />
+</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode matlab"><code class="sourceCode matlab"></code></pre></div>
+<p><img src="exercise10.png" alt="image" /></p>
+<h1 id="conclusion">Conclusion</h1>
+<p>Exercise 1 demonstrated the use of <em>abs()</em> to create a full rectifier, and <em>max()</em> to create a half rectifier. Exercises 2 and 3 use <em>butter()</em> and the Nyquist frequency to create low-pass and high-pass filters at any given real cutoff frequency. Exercise 4 composes a full rectifier together with a low-pass filter to extract the envelope from an audio signal.<br />
+Exercises 5 and 6 showed how to use discrete signal convolutions in matlab and how they can be used as signal filters. Exercises 7, 8, and 9 demonstrated how to make box signals in matlab and how to make the edges of the signals as steep as possible. Exercise 10 demonstrated how to convolve continous signals even though they are discrete signals in matlab.<br />
+</p>
+</body>
+</html>

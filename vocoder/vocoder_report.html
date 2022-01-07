@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="Youssef Beltagy AUT21 BEE 235" />
+  <title> Vocoder Project Report </title>
+  <style>
+    html {
+      line-height: 1.5;
+      font-family: Georgia, serif;
+      font-size: 20px;
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      word-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 1em;
+      }
+    }
+    @media print {
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, 'Lucida Console', Consolas, monospace;
+      font-size: 85%;
+      margin: 0;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      background-color: #1a1a1a;
+      border: none;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title"> <span class="smallcaps">Vocoder Project Report</span> </h1>
+<p class="author"><span>Youssef Beltagy</span><br />
+<span class="smallcaps">AUT21 BEE 235</span></p>
+</header>
+<h1 id="abstract">Abstract</h1>
+<p>I implemented a channel vocoder which can use a sine wave or white noise as the carrier. I experimented with the vocoder to identify the minimum number of bands necessary for a vocoded signal to be understandable.<br />
+I also implemented a sound chimaerizer which combines two sound signals together to make a hybrid chimaera sound.</p>
+<h1 id="code-explanation">Code Explanation</h1>
+<p>This is a brief explanation of how the code is organized.<br />
+vocode.m and chimera.m are the vocoder and chimaerizer respectively. vocode_run and chimera_run are helper functions to ease the use of the vocoder and chimaerizer.<br />
+audioread_mono.m loads an sound file as a mono channel audio signal. bands_cutoff.m generates the frequency ranges for the bands. plots.m generates plots. demo.m is a short demo of the code.<br />
+Please unzip the project and run demo.m.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode matlab"><code class="sourceCode matlab"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">% Youssef Beltagy</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co">% BEE235A, Aut 2021, Vocoder Project</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co">% demo.m - Project Demo</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;Sine Vocoder Demo&quot;</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co">% Runs the vocoder on the first sentence using 8 bands and </span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co">% a sine carrier wave.</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="va">vocode_run</span>(<span class="fl">1</span><span class="op">,</span><span class="st">&quot;both&quot;</span><span class="op">,</span><span class="fl">8</span><span class="op">,</span><span class="st">&quot;sine&quot;</span>)<span class="op">;</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;White Noise Vocoder Demo&quot;</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co">% Runs the vocoder on the first sentence using 8 bands and </span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="co">% a white noise carrier wave.</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="va">vocode_run</span>(<span class="fl">1</span><span class="op">,</span><span class="st">&quot;both&quot;</span><span class="op">,</span><span class="fl">8</span><span class="op">,</span><span class="st">&quot;noise&quot;</span>)<span class="op">;</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;Chimera without Swapping Demo&quot;</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="co">% Runs the chimera function with the first and second sentences</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="co">% using 8 bands and without swapping the TCF/ENV between </span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="co">% the two signals for different bands.</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="va">chimera_run</span>(<span class="fl">1</span><span class="op">,</span><span class="fl">2</span><span class="op">,</span><span class="st">&quot;both&quot;</span><span class="op">,</span><span class="fl">8</span><span class="op">,</span><span class="st">&quot;no-swap&quot;</span>)<span class="op">;</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;Chimera with Swapping Demo&quot;</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="co">% Runs the chimera function with the first and second sentences</span></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="co">% using 8 bands and swaps the TCF/ENV between the two signals </span></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a><span class="co">% for different bands.</span></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a><span class="va">chimera_run</span>(<span class="fl">1</span><span class="op">,</span><span class="fl">2</span><span class="op">,</span><span class="st">&quot;both&quot;</span><span class="op">,</span><span class="fl">8</span><span class="op">,</span><span class="st">&quot;swap&quot;</span>)<span class="op">;</span></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;Musical Chimera without Swapping Demo&quot;</span></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a><span class="co">% Runs the chimera function with the first sentence and music</span></span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a><span class="co">% using 8 bands and without swapping the TCF/ENV between </span></span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a><span class="co">% the two signals for different bands.</span></span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a><span class="va">chimera_run</span>(<span class="fl">1</span><span class="op">,</span><span class="fl">27</span><span class="op">,</span><span class="st">&quot;chimera&quot;</span><span class="op">,</span><span class="fl">8</span><span class="op">,</span><span class="st">&quot;no-swap&quot;</span>)<span class="op">;</span></span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;Musical Chimera with Swapping Demo&quot;</span></span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a><span class="co">% Runs the chimera function with the first sentence and music</span></span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a><span class="co">% using 8 bands and swaps the TCF/ENV between the two signals </span></span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a><span class="co">% for different bands.</span></span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a><span class="va">chimera_run</span>(<span class="fl">1</span><span class="op">,</span><span class="fl">27</span><span class="op">,</span><span class="st">&quot;chimera&quot;</span><span class="op">,</span><span class="fl">8</span><span class="op">,</span><span class="st">&quot;swap&quot;</span>)<span class="op">;</span></span></code></pre></div>
+<h1 id="vocoder">Vocoder</h1>
+<p>The vocoder splits the signal into frequency bands. It then extracts the envelope of each band and multiplies the envelope with a sine wave in the middle of the band. The output signal is the summation of those bands.<br />
+</p>
+<h2 id="sine-vocoder">Sine Vocoder</h2>
+<p>This is the output from the 4-band sine vocoder for “The fire is very hot" (sentence 7). It is similar to the input but it is more symmetric across the x-axis.</p>
+<p><img src="output/IO_4sine.png" alt="image" /></p>
+<p>These are the envelopes used to generate the output.</p>
+<p><img src="output/sent007_envelopes.png" alt="image" /></p>
+<p>The below four images show the four bands generated when the vocoder is used on “The fire is very hot" with 4 frequency bands. They show the everything starting from the original signal spectrum, to the band pass filter used, to the envelope of the band, and to band itself.</p>
+<p><img src="output/band1.png" alt="image" /></p>
+<p><img src="output/band2.png" alt="image" /></p>
+<p><img src="output/band3.png" alt="image" /></p>
+<p><img src="output/band4.png" alt="image" /></p>
+<p>To generate the envelopes, I use this low pass filter.</p>
+<p><img src="output/envelope_lpf.png" alt="image" /></p>
+<h2 id="white-noise-vocoder">White Noise Vocoder</h2>
+<p>I implemented the white noise vocoder. It is redundant to regenerate the previous plots for the noise vocoder, so let’s jump to the spectrum analysis.<br />
+This is the original signal spectrum.</p>
+<p><img src="output/original_spectrogram.png" alt="image" /></p>
+<p>The following two plots are the spectrograms of a 1-band and a 4-band sine vocoder, respectively.</p>
+<p><img src="output/vocoded_1sine_spectrogram.png" alt="image" /></p>
+<p><img src="output/vocoded_4sine_spectrogram.png" alt="image" /></p>
+<p>These last two plots are the spectrograms of a 1-band and a 4-band noise vocoder, respectively.</p>
+<p><img src="output/vocoded_1noise_spectrogram.png" alt="image" /></p>
+<p><img src="output/vocoded_4noise_spectrogram.png" alt="image" /></p>
+<p>The sine vocoder has sharp horizontal lines for the sine of every band. The noise vocoder’s spectrum is much more uniform than the sine vocoder and looks more similar to the original signal spectrum.</p>
+<h2 id="sine-vocoder-experiment">Sine Vocoder Experiment</h2>
+<p>I asked two listeners to listen to sine vocoded sentences and tell me the words they understood. Since we were only provided with 15 sentences, I made more sentences with audacity. They are open source and you can use them in future assignments.<br />
+The listeners started understanding the speech when the number of bands was 4. But they felt very uncomfortable with 4 bands. They preferred 7-10 bands.<br />
+When the number of bands was in the hundreds (300 for example), the listeners didn’t understand the speech at all.</p>
+<p><img src="output/experiment.png" alt="image" /></p>
+<h1 id="chimaerizer">Chimaerizer</h1>
+<p>I implemented two versions of the chimaerizer: One consistently uses one signal as the carrier and the other as the envelope. The other swaps the envelope and carrier between the two signals for every band.<br />
+Let’s begin with the chimaerizer which doesn’t swap. If the two signals are the same, the output sounds just like the input.<br />
+If the two signals are different, but the number of bands is small (1-2), the envelope is always more prominent than the carrier. But as the number of bands increases, the carrier becomes more prominent. When the number of bands is around 3-4, the two sounds are mixed together and hard to understand.<br />
+When I played speech envelope with sound carrier, it sounded as if background music was added to vocoded speech.<br />
+As for the chimaerizer which swaps, for a small number of bands, the two signals mixed and were hard to discern. When the number of bands is larger, one signal seems to consistently win over the other. I can then understand the winning signal.<br />
+Some signals keep switching between winning and losing. In these cases, it sounded like two people are saying a sentence in turns (like the witches in Hercules) and I confuse some words from one sentence with the other<br />
+When I played a sentence with music, it sounded like someone synthesizing speech from music.<br />
+When I played two music signals together, it sounded like I was switching back and forth between two tracks.</p>
+<h1 id="conclusion">Conclusion</h1>
+<p>I implemented a sine vocoder and a white noise vocoder. Humans need at least 4 frequency bands to understand speech. White noise vocoders are easier to understand than sine wave vocoders.<br />
+A chimaerizer mixes two sound signals together using one as an envelope and the other as the carrier. Chimaerizers make sounds which feel as if two people were talking at the same time.</p>
+<h1 id="code">Code</h1>
+<p>I attached the code in my submission, but I will include it here too for ease of reference.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode matlab"><code class="sourceCode matlab"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">% Youssef Beltagy</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co">% BEE235A, Aut 2021, Vocoder Project</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co">% bands_cutoff.m - Generates</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co">% frequency cutoffs for N bands.</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co">% The bands increase in size exponentially.</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="va">fco</span><span class="op">=</span><span class="va">bands_cutoff</span>(<span class="va">fmin</span><span class="op">,</span> <span class="va">fmax</span><span class="op">,</span> <span class="va">N</span>)</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="va">xmin</span> <span class="op">=</span> <span class="va">log10</span>(<span class="va">fmin</span><span class="op">/</span><span class="fl">165.4</span><span class="op">+</span><span class="fl">1</span>)<span class="op">/</span><span class="fl">2.1</span><span class="op">;</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  <span class="va">xmax</span> <span class="op">=</span> <span class="va">log10</span>(<span class="va">fmax</span><span class="op">/</span><span class="fl">165.4</span><span class="op">+</span><span class="fl">1</span>)<span class="op">/</span><span class="fl">2.1</span><span class="op">;</span>    <span class="co">%relative value</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  <span class="va">dx</span> <span class="op">=</span> (<span class="va">xmax</span><span class="op">-</span><span class="va">xmin</span>)<span class="op">/</span><span class="va">N</span><span class="op">;</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>  <span class="va">x</span> <span class="op">=</span> <span class="va">xmin</span><span class="op">:</span><span class="va">dx</span><span class="op">:</span><span class="va">xmax</span><span class="op">;</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>  <span class="va">fco</span><span class="op">=</span><span class="va">zeros</span>(<span class="fl">1</span><span class="op">,</span><span class="va">N</span><span class="op">+</span><span class="fl">1</span>)<span class="op">;</span> </span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="kw">for</span> <span class="va">i</span><span class="op">=</span><span class="fl">1</span><span class="op">:</span><span class="va">N</span><span class="op">+</span><span class="fl">1</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a><span class="va">fco</span>(<span class="va">i</span>)<span class="op">=</span><span class="fl">165.4</span><span class="op">*</span>(<span class="fl">10</span><span class="op">^</span>(<span class="va">x</span>(<span class="va">i</span>)<span class="op">*</span><span class="fl">2.1</span>)<span class="op">-</span><span class="fl">1</span>)<span class="op">;</span></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode matlab"><code class="sourceCode matlab"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">% Youssef Beltagy</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co">% BEE235A, Aut 2021, Vocoder Project</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co">% vocode.m - The vocoder.</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co">% arguments</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co">%        ss(:,:); % input sound signal</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co">%        Fs(1,1); % signal sampling frequency</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co">%        num_bands(1,1) = 8; % number of input bands</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co">%        mode(1,1) = &quot;sine&quot;; % whether to use a sine wave </span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co">%        % or white noise as the carrier.</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co">%        % mode: sine, noise</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="co">%        fmin(1,1) = 300; % minimum frequency to use in the bands.</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="co">%        fmax(1,1) = 6000; % maximum frequency to use in the bands.</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="va">os</span> <span class="op">=</span> <span class="va">vocode</span>(<span class="va">ss</span><span class="op">,</span> <span class="va">Fs</span><span class="op">,</span> <span class="va">num_bands</span><span class="op">,</span> <span class="va">mode</span><span class="op">,</span> <span class="va">fmin</span><span class="op">,</span> <span class="va">fmax</span>)</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>   <span class="va">arguments</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>        <span class="va">ss</span>(<span class="op">:,:</span>)<span class="op">;</span> <span class="co">% input sound signal</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>        <span class="va">Fs</span>(<span class="fl">1</span><span class="op">,</span><span class="fl">1</span>)<span class="op">;</span> <span class="co">% signal sampling frequency</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>        <span class="va">num_bands</span>(<span class="fl">1</span><span class="op">,</span><span class="fl">1</span>) <span class="op">=</span> <span class="fl">8</span><span class="op">;</span> <span class="co">% number of input bands</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>        <span class="va">mode</span>(<span class="fl">1</span><span class="op">,</span><span class="fl">1</span>) <span class="op">=</span> <span class="st">&quot;sine&quot;</span><span class="op">;</span> <span class="co">% whether to use a sine wave </span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>        <span class="co">% or white noise as the carrier.</span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>        <span class="co">% mode: sine, noise</span></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>        <span class="va">fmin</span>(<span class="fl">1</span><span class="op">,</span><span class="fl">1</span>) <span class="op">=</span> <span class="fl">300</span><span class="op">;</span> <span class="co">% minimum frequency to use in the bands.</span></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>        <span class="va">fmax</span>(<span class="fl">1</span><span class="op">,</span><span class="fl">1</span>) <span class="op">=</span> <span class="fl">6000</span><span class="op">;</span> <span class="co">% maximum frequency to use in the bands.</span></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>   <span class="kw">end</span></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a><span class="va">SIZE</span> <span class="op">=</span> <span class="va">size</span>(<span class="va">ss</span>)<span class="op">;</span></span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a><span class="kw">if</span> <span class="va">SIZE</span>(<span class="fl">1</span>) <span class="op">&gt;</span> <span class="fl">1</span></span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>    <span class="va">ss</span> <span class="op">=</span> <span class="va">ss</span><span class="op">&#39;;</span></span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a><span class="va">N</span> <span class="op">=</span> <span class="va">length</span>(<span class="va">ss</span>)<span class="op">;</span></span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a><span class="va">t</span> <span class="op">=</span> ( <span class="fl">0</span><span class="op">:</span>(<span class="va">N</span> <span class="op">-</span> <span class="fl">1</span>) ) <span class="op">./</span> <span class="va">Fs</span><span class="op">;</span></span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a><span class="co">% Low Pass Filter to make envelope</span></span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>[<span class="va">lpf_bb</span><span class="op">,</span><span class="va">lpf_aa</span>]<span class="op">=</span><span class="va">butter</span>(<span class="fl">2</span><span class="op">,</span><span class="fl">400</span><span class="op">/</span>(<span class="va">Fs</span><span class="op">/</span><span class="fl">2</span>))<span class="op">;</span></span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a><span class="va">cutoffs</span> <span class="op">=</span> <span class="va">bands_cutoff</span>(<span class="va">fmin</span><span class="op">,</span> <span class="va">fmax</span><span class="op">,</span> <span class="va">num_bands</span>)<span class="op">;</span></span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a><span class="va">os</span> <span class="op">=</span> <span class="va">zeros</span>(<span class="fl">1</span><span class="op">,</span> <span class="va">N</span>)<span class="op">;</span> <span class="co">% output signal</span></span>
+<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a><span class="kw">for</span> <span class="va">i</span><span class="op">=</span><span class="fl">1</span><span class="op">:</span><span class="va">num_bands</span></span>
+<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a>    <span class="co">% Band Pass Filter</span></span>
+<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a>    [<span class="va">bpf_bb</span><span class="op">,</span><span class="va">bpf_aa</span>]<span class="op">=</span><span class="va">butter</span>(<span class="fl">3</span><span class="op">,</span>[<span class="va">cutoffs</span>(<span class="va">i</span>) <span class="va">cutoffs</span>(<span class="va">i</span><span class="op">+</span><span class="fl">1</span>)] <span class="op">./</span> (<span class="va">Fs</span><span class="op">/</span><span class="fl">2</span>))<span class="op">;</span></span>
+<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a>    <span class="co">% Get Band</span></span>
+<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a>    <span class="va">band</span> <span class="op">=</span> <span class="va">filter</span>(<span class="va">bpf_bb</span><span class="op">,</span> <span class="va">bpf_aa</span><span class="op">,</span> <span class="va">ss</span>)<span class="op">;</span></span>
+<span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb3-49"><a href="#cb3-49" aria-hidden="true" tabindex="-1"></a>    <span class="co">%Generate Envelope</span></span>
+<span id="cb3-50"><a href="#cb3-50" aria-hidden="true" tabindex="-1"></a>    <span class="va">envelope</span> <span class="op">=</span> <span class="va">abs</span>(<span class="va">band</span>)<span class="op">;</span></span>
+<span id="cb3-51"><a href="#cb3-51" aria-hidden="true" tabindex="-1"></a>    <span class="va">envelope</span> <span class="op">=</span> <span class="va">filter</span>(<span class="va">lpf_bb</span><span class="op">,</span> <span class="va">lpf_aa</span><span class="op">,</span> <span class="va">envelope</span>)<span class="op">;</span></span>
+<span id="cb3-52"><a href="#cb3-52" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-53"><a href="#cb3-53" aria-hidden="true" tabindex="-1"></a>    <span class="va">band</span> <span class="op">=</span> <span class="va">generate_carrier</span>(<span class="va">mode</span><span class="op">,</span> <span class="va">cutoffs</span>(<span class="va">i</span>)<span class="op">,</span> <span class="va">cutoffs</span>(<span class="va">i</span> <span class="op">+</span> <span class="fl">1</span>)<span class="op">,</span> <span class="va">bpf_bb</span><span class="op">,</span> <span class="va">bpf_aa</span><span class="op">,</span> <span class="va">t</span>)<span class="op">;</span></span>
+<span id="cb3-54"><a href="#cb3-54" aria-hidden="true" tabindex="-1"></a>    <span class="va">band</span> <span class="op">=</span> <span class="va">band</span> <span class="op">.*</span> <span class="va">envelope</span><span class="op">;</span></span>
+<span id="cb3-55"><a href="#cb3-55" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-56"><a href="#cb3-56" aria-hidden="true" tabindex="-1"></a>    <span class="va">band</span> <span class="op">=</span> <span class="va">filter</span>(<span class="va">bpf_bb</span><span class="op">,</span> <span class="va">bpf_aa</span><span class="op">,</span> <span class="va">band</span>)<span class="op">;</span><span class="co">% pass band through BPF again</span></span>
+<span id="cb3-57"><a href="#cb3-57" aria-hidden="true" tabindex="-1"></a>            </span>
+<span id="cb3-58"><a href="#cb3-58" aria-hidden="true" tabindex="-1"></a>    <span class="va">os</span> <span class="op">=</span> <span class="va">os</span> <span class="op">+</span> <span class="va">band</span><span class="op">;</span></span>
+<span id="cb3-59"><a href="#cb3-59" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb3-60"><a href="#cb3-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-61"><a href="#cb3-61" aria-hidden="true" tabindex="-1"></a><span class="va">os</span> <span class="op">=</span> <span class="va">os</span> <span class="op">./</span> <span class="va">max</span>(<span class="va">abs</span>(<span class="va">os</span>))<span class="op">;</span> <span class="co">%normalize</span></span>
+<span id="cb3-62"><a href="#cb3-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-63"><a href="#cb3-63" aria-hidden="true" tabindex="-1"></a><span class="kw">if</span> <span class="va">SIZE</span>(<span class="fl">1</span>) <span class="op">&gt;</span> <span class="fl">1</span></span>
+<span id="cb3-64"><a href="#cb3-64" aria-hidden="true" tabindex="-1"></a>    <span class="va">os</span> <span class="op">=</span> <span class="va">os</span><span class="op">&#39;;</span></span>
+<span id="cb3-65"><a href="#cb3-65" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb3-66"><a href="#cb3-66" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-67"><a href="#cb3-67" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb3-68"><a href="#cb3-68" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-69"><a href="#cb3-69" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="va">carrier</span><span class="op">=</span><span class="va">generate_carrier</span>(<span class="va">mode</span><span class="op">,</span> <span class="va">fmin</span><span class="op">,</span> <span class="va">fmax</span><span class="op">,</span> <span class="va">bpf_bb</span><span class="op">,</span> <span class="va">bpf_aa</span><span class="op">,</span> <span class="va">t</span>)</span>
+<span id="cb3-70"><a href="#cb3-70" aria-hidden="true" tabindex="-1"></a>    <span class="kw">if</span> (<span class="va">strcmp</span>(<span class="va">mode</span><span class="op">,</span><span class="st">&quot;noise&quot;</span>))</span>
+<span id="cb3-71"><a href="#cb3-71" aria-hidden="true" tabindex="-1"></a>        <span class="va">carrier</span> <span class="op">=</span> <span class="op">-</span><span class="fl">1</span> <span class="op">+</span> <span class="fl">2</span> <span class="op">.*</span> <span class="va">rand</span>(<span class="va">size</span>(<span class="va">t</span>))<span class="op">;</span></span>
+<span id="cb3-72"><a href="#cb3-72" aria-hidden="true" tabindex="-1"></a>        <span class="va">carrier</span> <span class="op">=</span> <span class="va">filter</span>(<span class="va">bpf_bb</span><span class="op">,</span> <span class="va">bpf_aa</span><span class="op">,</span> <span class="va">carrier</span>)<span class="op">;</span></span>
+<span id="cb3-73"><a href="#cb3-73" aria-hidden="true" tabindex="-1"></a>    <span class="kw">else</span></span>
+<span id="cb3-74"><a href="#cb3-74" aria-hidden="true" tabindex="-1"></a>        <span class="va">carrier</span> <span class="op">=</span> <span class="va">sin</span>(<span class="va">pi</span> <span class="op">.*</span> (<span class="va">fmin</span> <span class="op">+</span> <span class="va">fmax</span>) <span class="op">.*</span> <span class="va">t</span> )<span class="op">;</span></span>
+<span id="cb3-75"><a href="#cb3-75" aria-hidden="true" tabindex="-1"></a>    <span class="kw">end</span></span>
+<span id="cb3-76"><a href="#cb3-76" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode matlab"><code class="sourceCode matlab"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">% Youssef Beltagy</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co">% BEE235A, Aut 2021, Vocoder Project</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co">% chimera.m - The chimera function</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co">%arguments</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co">%        input_sig1(:,:); % first input signal</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co">%        input_Fs1(1,1); % sampling frequency of first input signal</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co">%        input_sig2(:,:); % second input signal</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="co">%        input_Fs2(1,1); % sampling frequency of second input signal</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="co">%        num_bands(1,1) = 8; % number of bands to use</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="co">%        mode(1,1) = &quot;no-swap&quot;; % specifies whether to flip between the </span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="co">%        two signals or not. mode: swap, no-swap</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="co">%        fmin(1,1) = 300; % minimum frequency to use in bands</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="co">%        fmax(1,1) = 6000; % maximum frequency to use in bands</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> [<span class="va">os</span><span class="op">,</span> <span class="va">Fs</span>] <span class="op">=</span> <span class="va">chimera</span>(<span class="va">input_sig1</span><span class="op">,</span> <span class="va">input_Fs1</span><span class="op">,</span> <span class="va">input_sig2</span><span class="op">,</span> <span class="op">...</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>                            <span class="va">input_Fs2</span><span class="op">,</span> <span class="va">num_bands</span><span class="op">,</span> <span class="va">mode</span><span class="op">,</span> <span class="va">fmin</span><span class="op">,</span> <span class="va">fmax</span>)</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>    <span class="va">arguments</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>        <span class="va">input_sig1</span>(<span class="op">:,:</span>)<span class="op">;</span> <span class="co">% first input signal</span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>        <span class="va">input_Fs1</span>(<span class="fl">1</span><span class="op">,</span><span class="fl">1</span>)<span class="op">;</span> <span class="co">% sampling frequency of first input signal</span></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>        <span class="va">input_sig2</span>(<span class="op">:,:</span>)<span class="op">;</span> <span class="co">% seconds input signal</span></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>        <span class="va">input_Fs2</span>(<span class="fl">1</span><span class="op">,</span><span class="fl">1</span>)<span class="op">;</span> <span class="co">% sampling frequency of second input signal</span></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>        <span class="va">num_bands</span>(<span class="fl">1</span><span class="op">,</span><span class="fl">1</span>) <span class="op">=</span> <span class="fl">8</span><span class="op">;</span> <span class="co">% number of bands to use</span></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>        <span class="va">mode</span>(<span class="fl">1</span><span class="op">,</span><span class="fl">1</span>) <span class="op">=</span> <span class="st">&quot;no-swap&quot;</span><span class="op">;</span> <span class="co">% specifies whether to flip between the two signals or not.</span></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>        <span class="co">% mode: swap, no-swap</span></span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>        <span class="va">fmin</span>(<span class="fl">1</span><span class="op">,</span><span class="fl">1</span>) <span class="op">=</span> <span class="fl">300</span><span class="op">;</span> <span class="co">% minimum frequency to use in bands</span></span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>        <span class="va">fmax</span>(<span class="fl">1</span><span class="op">,</span><span class="fl">1</span>) <span class="op">=</span> <span class="fl">6000</span><span class="op">;</span> <span class="co">% maximum frequency to use in bands</span></span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>   <span class="kw">end</span></span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>[<span class="va">sig1</span><span class="op">,</span> <span class="va">sig2</span><span class="op">,</span> <span class="va">Fs</span><span class="op">,</span> <span class="va">N</span>] <span class="op">=</span> <span class="op">...</span> </span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a><span class="va">normalize_sampling_and_length</span>(<span class="va">input_sig1</span><span class="op">,</span> <span class="va">input_Fs1</span><span class="op">,</span> <span class="op">...</span> </span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>                                <span class="va">input_sig2</span><span class="op">,</span> <span class="va">input_Fs2</span>)<span class="op">;</span></span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a><span class="va">cutoffs</span> <span class="op">=</span> <span class="va">bands_cutoff</span>(<span class="va">fmin</span><span class="op">,</span> <span class="va">fmax</span><span class="op">,</span> <span class="va">num_bands</span>)<span class="op">;</span></span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a><span class="va">os</span> <span class="op">=</span> <span class="va">zeros</span>(<span class="fl">1</span><span class="op">,</span> <span class="va">N</span>)<span class="op">;</span> <span class="co">% output signal</span></span>
+<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a><span class="kw">for</span> <span class="va">i</span><span class="op">=</span><span class="fl">1</span><span class="op">:</span><span class="va">num_bands</span></span>
+<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a>    <span class="co">% band pass filter</span></span>
+<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a>    [<span class="va">bpf_bb</span><span class="op">,</span><span class="va">bpf_aa</span>] <span class="op">=</span> <span class="va">butter</span>(<span class="fl">3</span><span class="op">,</span>[<span class="va">cutoffs</span>(<span class="va">i</span>) <span class="va">cutoffs</span>(<span class="va">i</span><span class="op">+</span><span class="fl">1</span>)] <span class="op">./</span> (<span class="va">Fs</span><span class="op">/</span><span class="fl">2</span>))<span class="op">;</span></span>
+<span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a>    <span class="co">% envelope and carrier for first signal</span></span>
+<span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a>    <span class="va">sig1_band</span> <span class="op">=</span> <span class="va">filter</span>(<span class="va">bpf_bb</span><span class="op">,</span> <span class="va">bpf_aa</span><span class="op">,</span> <span class="va">sig1</span>)<span class="op">;</span></span>
+<span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a>    [<span class="va">sig1_env</span><span class="op">,</span> <span class="va">sig1_tfs</span>] <span class="op">=</span> <span class="va">get_env_tfs</span>(<span class="va">sig1_band</span>)<span class="op">;</span></span>
+<span id="cb4-44"><a href="#cb4-44" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb4-45"><a href="#cb4-45" aria-hidden="true" tabindex="-1"></a>    <span class="co">% envelope and carrier for second signal</span></span>
+<span id="cb4-46"><a href="#cb4-46" aria-hidden="true" tabindex="-1"></a>    <span class="va">sig2_band</span> <span class="op">=</span> <span class="va">filter</span>(<span class="va">bpf_bb</span><span class="op">,</span> <span class="va">bpf_aa</span><span class="op">,</span> <span class="va">sig2</span>)<span class="op">;</span><span class="co">%</span></span>
+<span id="cb4-47"><a href="#cb4-47" aria-hidden="true" tabindex="-1"></a>    [<span class="va">sig2_env</span><span class="op">,</span> <span class="va">sig2_tfs</span>] <span class="op">=</span> <span class="va">get_env_tfs</span>(<span class="va">sig2_band</span>)<span class="op">;</span></span>
+<span id="cb4-48"><a href="#cb4-48" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb4-49"><a href="#cb4-49" aria-hidden="true" tabindex="-1"></a>    <span class="co">% if the mode is swapping, swap carrier and envelope every band.</span></span>
+<span id="cb4-50"><a href="#cb4-50" aria-hidden="true" tabindex="-1"></a>    <span class="co">% if not, just use the envelope of the first signal and the carrier of</span></span>
+<span id="cb4-51"><a href="#cb4-51" aria-hidden="true" tabindex="-1"></a>    <span class="co">% the second signal.</span></span>
+<span id="cb4-52"><a href="#cb4-52" aria-hidden="true" tabindex="-1"></a>    <span class="kw">if</span>(<span class="va">strcmp</span>(<span class="va">mode</span><span class="op">,</span><span class="st">&quot;swap&quot;</span>))</span>
+<span id="cb4-53"><a href="#cb4-53" aria-hidden="true" tabindex="-1"></a>        <span class="kw">if</span>(<span class="va">mod</span>(<span class="va">i</span><span class="op">,</span><span class="fl">2</span>) <span class="op">==</span> <span class="fl">1</span>)</span>
+<span id="cb4-54"><a href="#cb4-54" aria-hidden="true" tabindex="-1"></a>            <span class="va">os</span> <span class="op">=</span> <span class="va">os</span> <span class="op">+</span> <span class="va">sig1_env</span> <span class="op">.*</span> <span class="va">sig2_tfs</span><span class="op">;</span></span>
+<span id="cb4-55"><a href="#cb4-55" aria-hidden="true" tabindex="-1"></a>        <span class="kw">else</span></span>
+<span id="cb4-56"><a href="#cb4-56" aria-hidden="true" tabindex="-1"></a>            <span class="va">os</span> <span class="op">=</span> <span class="va">os</span> <span class="op">+</span> <span class="va">sig2_env</span> <span class="op">.*</span> <span class="va">sig1_tfs</span><span class="op">;</span></span>
+<span id="cb4-57"><a href="#cb4-57" aria-hidden="true" tabindex="-1"></a>        <span class="kw">end</span></span>
+<span id="cb4-58"><a href="#cb4-58" aria-hidden="true" tabindex="-1"></a>    <span class="kw">else</span></span>
+<span id="cb4-59"><a href="#cb4-59" aria-hidden="true" tabindex="-1"></a>        <span class="va">os</span> <span class="op">=</span> <span class="va">os</span> <span class="op">+</span> <span class="va">sig1_env</span> <span class="op">.*</span> <span class="va">sig2_tfs</span><span class="op">;</span></span>
+<span id="cb4-60"><a href="#cb4-60" aria-hidden="true" tabindex="-1"></a>    <span class="kw">end</span></span>
+<span id="cb4-61"><a href="#cb4-61" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb4-62"><a href="#cb4-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-63"><a href="#cb4-63" aria-hidden="true" tabindex="-1"></a><span class="va">os</span> <span class="op">=</span> <span class="va">os</span> <span class="op">./</span> <span class="va">max</span>(<span class="va">abs</span>(<span class="va">os</span>))<span class="op">;</span> <span class="co">%normalize</span></span>
+<span id="cb4-64"><a href="#cb4-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-65"><a href="#cb4-65" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb4-66"><a href="#cb4-66" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-67"><a href="#cb4-67" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> [<span class="va">os_1</span><span class="op">,</span> <span class="va">os_2</span><span class="op">,</span> <span class="va">Fs</span><span class="op">,</span> <span class="va">N</span>] <span class="op">=</span> <span class="va">normalize_sampling_and_length</span>(<span class="va">ss1</span><span class="op">,</span> <span class="va">Fs1</span><span class="op">,</span> <span class="va">ss2</span><span class="op">,</span> <span class="va">Fs2</span>)</span>
+<span id="cb4-68"><a href="#cb4-68" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-69"><a href="#cb4-69" aria-hidden="true" tabindex="-1"></a><span class="co">% normalize to the lower frequency</span></span>
+<span id="cb4-70"><a href="#cb4-70" aria-hidden="true" tabindex="-1"></a><span class="kw">if</span> <span class="va">Fs1</span> <span class="op">&gt;</span> <span class="va">Fs2</span></span>
+<span id="cb4-71"><a href="#cb4-71" aria-hidden="true" tabindex="-1"></a>   <span class="va">Fs</span> <span class="op">=</span> <span class="va">Fs2</span><span class="op">;</span></span>
+<span id="cb4-72"><a href="#cb4-72" aria-hidden="true" tabindex="-1"></a>   <span class="va">os_1</span> <span class="op">=</span> <span class="va">resample</span>(<span class="va">ss1</span><span class="op">,</span> <span class="va">Fs2</span><span class="op">,</span> <span class="va">Fs1</span>)<span class="op">;</span></span>
+<span id="cb4-73"><a href="#cb4-73" aria-hidden="true" tabindex="-1"></a>   <span class="va">os_2</span> <span class="op">=</span> <span class="va">ss2</span><span class="op">;</span></span>
+<span id="cb4-74"><a href="#cb4-74" aria-hidden="true" tabindex="-1"></a><span class="kw">elseif</span> <span class="va">Fs2</span> <span class="op">&gt;</span> <span class="va">Fs1</span></span>
+<span id="cb4-75"><a href="#cb4-75" aria-hidden="true" tabindex="-1"></a>    <span class="va">Fs</span> <span class="op">=</span> <span class="va">Fs1</span><span class="op">;</span></span>
+<span id="cb4-76"><a href="#cb4-76" aria-hidden="true" tabindex="-1"></a>    <span class="va">os_1</span> <span class="op">=</span> <span class="va">ss1</span><span class="op">;</span></span>
+<span id="cb4-77"><a href="#cb4-77" aria-hidden="true" tabindex="-1"></a>    <span class="va">os_2</span> <span class="op">=</span> <span class="va">resample</span>(<span class="va">ss2</span><span class="op">,</span><span class="va">Fs1</span><span class="op">,</span><span class="va">Fs2</span>)<span class="op">;</span></span>
+<span id="cb4-78"><a href="#cb4-78" aria-hidden="true" tabindex="-1"></a><span class="kw">else</span></span>
+<span id="cb4-79"><a href="#cb4-79" aria-hidden="true" tabindex="-1"></a>    <span class="va">Fs</span> <span class="op">=</span> <span class="va">Fs1</span><span class="op">;</span></span>
+<span id="cb4-80"><a href="#cb4-80" aria-hidden="true" tabindex="-1"></a>    <span class="va">os_1</span> <span class="op">=</span> <span class="va">ss1</span><span class="op">;</span></span>
+<span id="cb4-81"><a href="#cb4-81" aria-hidden="true" tabindex="-1"></a>    <span class="va">os_2</span> <span class="op">=</span> <span class="va">ss2</span><span class="op">;</span></span>
+<span id="cb4-82"><a href="#cb4-82" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb4-83"><a href="#cb4-83" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-84"><a href="#cb4-84" aria-hidden="true" tabindex="-1"></a><span class="co">% convert to row vectors</span></span>
+<span id="cb4-85"><a href="#cb4-85" aria-hidden="true" tabindex="-1"></a><span class="va">temp</span> <span class="op">=</span> <span class="va">size</span>(<span class="va">os_1</span>)<span class="op">;</span></span>
+<span id="cb4-86"><a href="#cb4-86" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-87"><a href="#cb4-87" aria-hidden="true" tabindex="-1"></a><span class="kw">if</span>(<span class="va">temp</span>(<span class="fl">1</span>) <span class="op">&gt;</span> <span class="fl">1</span>)</span>
+<span id="cb4-88"><a href="#cb4-88" aria-hidden="true" tabindex="-1"></a>    <span class="va">os_1</span> <span class="op">=</span> <span class="va">os_1</span><span class="op">&#39;;</span></span>
+<span id="cb4-89"><a href="#cb4-89" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb4-90"><a href="#cb4-90" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-91"><a href="#cb4-91" aria-hidden="true" tabindex="-1"></a><span class="va">temp</span> <span class="op">=</span> <span class="va">size</span>(<span class="va">os_2</span>)<span class="op">;</span></span>
+<span id="cb4-92"><a href="#cb4-92" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-93"><a href="#cb4-93" aria-hidden="true" tabindex="-1"></a><span class="kw">if</span>(<span class="va">temp</span>(<span class="fl">1</span>) <span class="op">&gt;</span> <span class="fl">1</span>)</span>
+<span id="cb4-94"><a href="#cb4-94" aria-hidden="true" tabindex="-1"></a>    <span class="va">os_2</span> <span class="op">=</span> <span class="va">os_2</span><span class="op">&#39;;</span></span>
+<span id="cb4-95"><a href="#cb4-95" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb4-96"><a href="#cb4-96" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-97"><a href="#cb4-97" aria-hidden="true" tabindex="-1"></a><span class="co">% normalize the vector sizes.</span></span>
+<span id="cb4-98"><a href="#cb4-98" aria-hidden="true" tabindex="-1"></a><span class="va">N</span> <span class="op">=</span> <span class="va">length</span>(<span class="va">os_1</span>)<span class="op">;</span></span>
+<span id="cb4-99"><a href="#cb4-99" aria-hidden="true" tabindex="-1"></a><span class="va">N2</span> <span class="op">=</span> <span class="va">length</span>(<span class="va">os_2</span>)<span class="op">;</span></span>
+<span id="cb4-100"><a href="#cb4-100" aria-hidden="true" tabindex="-1"></a><span class="kw">if</span> <span class="va">N2</span> <span class="op">&lt;</span> <span class="va">N</span></span>
+<span id="cb4-101"><a href="#cb4-101" aria-hidden="true" tabindex="-1"></a>    <span class="va">N</span> <span class="op">=</span> <span class="va">N2</span><span class="op">;</span></span>
+<span id="cb4-102"><a href="#cb4-102" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb4-103"><a href="#cb4-103" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-104"><a href="#cb4-104" aria-hidden="true" tabindex="-1"></a><span class="va">os_1</span> <span class="op">=</span> <span class="va">os_1</span>(<span class="op">:,</span><span class="fl">1</span><span class="op">:</span><span class="va">N</span>)<span class="op">;</span></span>
+<span id="cb4-105"><a href="#cb4-105" aria-hidden="true" tabindex="-1"></a><span class="va">os_2</span> <span class="op">=</span> <span class="va">os_2</span>(<span class="op">:,</span><span class="fl">1</span><span class="op">:</span><span class="va">N</span>)<span class="op">;</span></span>
+<span id="cb4-106"><a href="#cb4-106" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-107"><a href="#cb4-107" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb4-108"><a href="#cb4-108" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-109"><a href="#cb4-109" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> [<span class="va">env</span><span class="op">,</span><span class="va">tfs</span>] <span class="op">=</span> <span class="va">get_env_tfs</span>(<span class="va">ss</span>)</span>
+<span id="cb4-110"><a href="#cb4-110" aria-hidden="true" tabindex="-1"></a><span class="va">temp</span> <span class="op">=</span> <span class="va">hilbert</span>(<span class="va">ss</span>)<span class="op">;</span> <span class="co">% x: vector of an audio signal. To form an analytical signal (complex)</span></span>
+<span id="cb4-111"><a href="#cb4-111" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-112"><a href="#cb4-112" aria-hidden="true" tabindex="-1"></a><span class="va">env</span> <span class="op">=</span> <span class="va">abs</span>(<span class="va">temp</span>)<span class="op">;</span> <span class="co">% envelope extraction ENV </span></span>
+<span id="cb4-113"><a href="#cb4-113" aria-hidden="true" tabindex="-1"></a><span class="va">inst_phase</span> <span class="op">=</span> <span class="va">unwrap</span>(<span class="va">angle</span>(<span class="va">temp</span>))<span class="op">;</span> <span class="co">% instantaneous phase</span></span>
+<span id="cb4-114"><a href="#cb4-114" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-115"><a href="#cb4-115" aria-hidden="true" tabindex="-1"></a><span class="co">%Regenerate the carrier from the instantaneous phase </span></span>
+<span id="cb4-116"><a href="#cb4-116" aria-hidden="true" tabindex="-1"></a><span class="va">tfs</span> <span class="op">=</span> <span class="va">cos</span>(<span class="va">inst_phase</span>)<span class="op">;</span> <span class="co">% temporal fine structure TFS</span></span>
+<span id="cb4-117"><a href="#cb4-117" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode matlab"><code class="sourceCode matlab"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">% Youssef Beltagy</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co">% BEE235A, Aut 2021, Vocoder Project</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co">% audioread_mono - loads a file</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co">% as a monochannel sound signal</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co">% arguments</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co">%   i(1:1); % the index of the sentence</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> [<span class="va">ss</span><span class="op">,</span><span class="va">Fs</span>] <span class="op">=</span> <span class="va">audioread_mono</span>(<span class="va">i</span>)</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    [<span class="va">ss</span><span class="op">,</span> <span class="va">Fs</span>] <span class="op">=</span> <span class="va">audioread</span>(<span class="va">sprintf</span>(<span class="ss">&#39;sounds/sent%03d.wav&#39;</span><span class="op">,</span><span class="va">i</span>))<span class="op">;</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    <span class="va">SIZE</span> <span class="op">=</span> <span class="va">size</span>(<span class="va">ss</span>)<span class="op">;</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    <span class="kw">if</span>(<span class="va">SIZE</span>(<span class="fl">2</span>) <span class="op">&gt;</span> <span class="fl">1</span>)</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>        <span class="va">ss</span> <span class="op">=</span> (<span class="va">ss</span>(<span class="op">:,</span><span class="fl">1</span>) <span class="op">+</span> <span class="va">ss</span>(<span class="op">:,</span><span class="fl">2</span>)) <span class="op">./</span> <span class="fl">2</span><span class="op">;</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>    <span class="kw">end</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode matlab"><code class="sourceCode matlab"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">% Youssef Beltagy</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co">% BEE235A, Aut 2021, Vocoder Project</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co">% vocode_run.m - A helper function</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co">% to easily load sounds and run the vocoder.</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co">% arguments</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co">%        i(1,1) int8 = 0; % the index of sound to use</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co">%        mode(1,1) string = &quot;both&quot;; % the running mode: original, vocode, both, reverse</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co">%        num_bands(1,1) = 8; % Vocoder number of bands</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="co">%        vocode_mode(1,1) string = &quot;sine&quot;; % the vocoder mode: sine, noise</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="co">% examples</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="co">%   vocode_run() % runs all 25 sounds and plays both original and vocoded</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="co">%   signal</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="co">%   vocode_run(0) same as above</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a><span class="co">%   vocode_run(i) runs the sentence number i. i must be in range [1,27]</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a><span class="co">%   vocode_run(i,mode) mode chooses whether you play just the original</span></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a><span class="co">%                       signal, just the vocoded signal, both, or both in</span></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a><span class="co">%                       reverse order.</span></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a><span class="co">%   vocode_run(i, mode, num_bands, vocode_mode) num_bands and vocode_mode</span></span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a><span class="co">%                       specify different running modes for the vocoder.</span></span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a><span class="co">%                       num_bands decides the number of bands of the</span></span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a><span class="co">%                       vocoder.</span></span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a><span class="co">%                       vocode_mode decides whether the vocoder uses a sine</span></span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a><span class="co">%                       wave or white noise.</span></span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="va">vocode_run</span>(<span class="va">i</span><span class="op">,</span> <span class="va">mode</span><span class="op">,</span> <span class="va">num_bands</span><span class="op">,</span> <span class="va">vocode_mode</span>)</span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>    <span class="va">arguments</span></span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>        <span class="va">i</span>(<span class="fl">1</span><span class="op">,</span><span class="fl">1</span>) <span class="va">int8</span> <span class="op">=</span> <span class="fl">0</span><span class="op">;</span> <span class="co">% the index of sound to use</span></span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a>        <span class="va">mode</span>(<span class="fl">1</span><span class="op">,</span><span class="fl">1</span>) <span class="va">string</span> <span class="op">=</span> <span class="st">&quot;both&quot;</span><span class="op">;</span> <span class="co">% the running mode: original, vocode, both, reverse</span></span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a>        <span class="va">num_bands</span>(<span class="fl">1</span><span class="op">,</span><span class="fl">1</span>) <span class="op">=</span> <span class="fl">8</span><span class="op">;</span> <span class="co">% Vocoder number of bands</span></span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a>        <span class="va">vocode_mode</span>(<span class="fl">1</span><span class="op">,</span><span class="fl">1</span>) <span class="va">string</span> <span class="op">=</span> <span class="st">&quot;sine&quot;</span><span class="op">;</span> <span class="co">% the vocoder mode: sine, noise</span></span>
+<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a>    <span class="kw">end</span></span>
+<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a><span class="co">% Choose Mode</span></span>
+<span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a><span class="co">% defualt is to play both original and vocoded sound</span></span>
+<span id="cb6-35"><a href="#cb6-35" aria-hidden="true" tabindex="-1"></a><span class="va">play</span> <span class="op">=</span> <span class="op">@</span><span class="va">play_sound</span><span class="op">;</span> </span>
+<span id="cb6-36"><a href="#cb6-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-37"><a href="#cb6-37" aria-hidden="true" tabindex="-1"></a><span class="kw">if</span>(<span class="va">strcmp</span>(<span class="va">mode</span><span class="op">,</span><span class="ss">&#39;original&#39;</span>))</span>
+<span id="cb6-38"><a href="#cb6-38" aria-hidden="true" tabindex="-1"></a>    <span class="va">play</span> <span class="op">=</span> <span class="op">@</span><span class="va">play_original</span><span class="op">;</span></span>
+<span id="cb6-39"><a href="#cb6-39" aria-hidden="true" tabindex="-1"></a><span class="kw">elseif</span>(<span class="va">strcmp</span>(<span class="va">mode</span><span class="op">,</span><span class="ss">&#39;vocode&#39;</span>))</span>
+<span id="cb6-40"><a href="#cb6-40" aria-hidden="true" tabindex="-1"></a>    <span class="va">play</span> <span class="op">=</span> <span class="op">@</span><span class="va">play_vocode</span><span class="op">;</span></span>
+<span id="cb6-41"><a href="#cb6-41" aria-hidden="true" tabindex="-1"></a><span class="kw">elseif</span>(<span class="va">strcmp</span>(<span class="va">mode</span><span class="op">,</span><span class="ss">&#39;reverse&#39;</span>))</span>
+<span id="cb6-42"><a href="#cb6-42" aria-hidden="true" tabindex="-1"></a>    <span class="va">play</span> <span class="op">=</span> <span class="op">@</span><span class="va">play_sound_rev</span><span class="op">;</span></span>
+<span id="cb6-43"><a href="#cb6-43" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb6-44"><a href="#cb6-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-45"><a href="#cb6-45" aria-hidden="true" tabindex="-1"></a><span class="co">% Play Sound    </span></span>
+<span id="cb6-46"><a href="#cb6-46" aria-hidden="true" tabindex="-1"></a><span class="kw">if</span> <span class="va">i</span> <span class="op">==</span> <span class="fl">0</span></span>
+<span id="cb6-47"><a href="#cb6-47" aria-hidden="true" tabindex="-1"></a>    <span class="kw">for</span> <span class="va">n</span><span class="op">=</span><span class="fl">1</span><span class="op">:</span><span class="fl">25</span></span>
+<span id="cb6-48"><a href="#cb6-48" aria-hidden="true" tabindex="-1"></a>    [<span class="va">ss</span><span class="op">,</span><span class="va">Fs</span>] <span class="op">=</span> <span class="va">audioread_mono</span>(<span class="va">n</span>)<span class="op">;</span></span>
+<span id="cb6-49"><a href="#cb6-49" aria-hidden="true" tabindex="-1"></a>    <span class="va">play</span>(<span class="va">ss</span><span class="op">,</span> <span class="va">Fs</span><span class="op">,</span> <span class="va">num_bands</span>)<span class="op">;</span></span>
+<span id="cb6-50"><a href="#cb6-50" aria-hidden="true" tabindex="-1"></a>    <span class="kw">end</span></span>
+<span id="cb6-51"><a href="#cb6-51" aria-hidden="true" tabindex="-1"></a><span class="kw">elseif</span> <span class="va">i</span> <span class="op">&gt;</span> <span class="fl">0</span> <span class="op">&amp;&amp;</span> <span class="va">i</span> <span class="op">&lt;=</span> <span class="fl">27</span></span>
+<span id="cb6-52"><a href="#cb6-52" aria-hidden="true" tabindex="-1"></a>    [<span class="va">ss</span><span class="op">,</span> <span class="va">Fs</span>] <span class="op">=</span> <span class="va">audioread_mono</span>(<span class="va">i</span>)<span class="op">;</span></span>
+<span id="cb6-53"><a href="#cb6-53" aria-hidden="true" tabindex="-1"></a>    <span class="va">play</span>(<span class="va">ss</span><span class="op">,</span> <span class="va">Fs</span><span class="op">,</span> <span class="va">num_bands</span><span class="op">,</span> <span class="va">vocode_mode</span>)<span class="op">;</span></span>
+<span id="cb6-54"><a href="#cb6-54" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb6-55"><a href="#cb6-55" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb6-56"><a href="#cb6-56" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb6-57"><a href="#cb6-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-58"><a href="#cb6-58" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="va">play_original</span>(<span class="va">ss</span><span class="op">,</span> <span class="va">Fs</span><span class="op">,</span> <span class="op">~,</span> <span class="op">~</span>)</span>
+<span id="cb6-59"><a href="#cb6-59" aria-hidden="true" tabindex="-1"></a><span class="va">sound</span>(<span class="va">ss</span><span class="op">,</span><span class="va">Fs</span>)<span class="op">;</span></span>
+<span id="cb6-60"><a href="#cb6-60" aria-hidden="true" tabindex="-1"></a><span class="va">pause</span>(<span class="va">length</span>(<span class="va">ss</span>)<span class="op">/</span><span class="va">Fs</span> <span class="op">+</span> <span class="fl">0.5</span>)<span class="op">;</span></span>
+<span id="cb6-61"><a href="#cb6-61" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb6-62"><a href="#cb6-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-63"><a href="#cb6-63" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="va">play_vocode</span>(<span class="va">ss</span><span class="op">,</span> <span class="va">Fs</span><span class="op">,</span> <span class="va">num_bands</span><span class="op">,</span> <span class="va">vocode_mode</span>)</span>
+<span id="cb6-64"><a href="#cb6-64" aria-hidden="true" tabindex="-1"></a><span class="va">sound</span>(<span class="va">vocode</span>(<span class="va">ss</span><span class="op">,</span> <span class="va">Fs</span><span class="op">,</span> <span class="va">num_bands</span><span class="op">,</span> <span class="va">vocode_mode</span>)<span class="op">,</span> <span class="va">Fs</span>)<span class="op">;</span></span>
+<span id="cb6-65"><a href="#cb6-65" aria-hidden="true" tabindex="-1"></a><span class="va">pause</span>(<span class="va">length</span>(<span class="va">ss</span>)<span class="op">/</span><span class="va">Fs</span> <span class="op">+</span> <span class="fl">0.5</span>)<span class="op">;</span></span>
+<span id="cb6-66"><a href="#cb6-66" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb6-67"><a href="#cb6-67" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-68"><a href="#cb6-68" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="va">play_sound</span>(<span class="va">ss</span><span class="op">,</span> <span class="va">Fs</span><span class="op">,</span> <span class="va">num_bands</span><span class="op">,</span> <span class="va">vocode_mode</span>)</span>
+<span id="cb6-69"><a href="#cb6-69" aria-hidden="true" tabindex="-1"></a>    <span class="va">play_original</span>(<span class="va">ss</span><span class="op">,</span> <span class="va">Fs</span><span class="op">,</span> <span class="va">num_bands</span><span class="op">,</span> <span class="va">vocode_mode</span>)<span class="op">;</span></span>
+<span id="cb6-70"><a href="#cb6-70" aria-hidden="true" tabindex="-1"></a>    <span class="va">play_vocode</span>(<span class="va">ss</span><span class="op">,</span> <span class="va">Fs</span><span class="op">,</span> <span class="va">num_bands</span><span class="op">,</span> <span class="va">vocode_mode</span>)<span class="op">;</span></span>
+<span id="cb6-71"><a href="#cb6-71" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb6-72"><a href="#cb6-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-73"><a href="#cb6-73" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="va">play_sound_rev</span>(<span class="va">ss</span><span class="op">,</span> <span class="va">Fs</span><span class="op">,</span> <span class="va">num_bands</span><span class="op">,</span> <span class="va">vocode_mode</span>)</span>
+<span id="cb6-74"><a href="#cb6-74" aria-hidden="true" tabindex="-1"></a>    <span class="va">play_vocode</span>(<span class="va">ss</span><span class="op">,</span><span class="va">Fs</span><span class="op">,</span> <span class="va">num_bands</span><span class="op">,</span> <span class="va">vocode_mode</span>)<span class="op">;</span></span>
+<span id="cb6-75"><a href="#cb6-75" aria-hidden="true" tabindex="-1"></a>    <span class="va">play_original</span>(<span class="va">ss</span><span class="op">,</span><span class="va">Fs</span><span class="op">,</span> <span class="va">num_bands</span><span class="op">,</span> <span class="va">vocode_mode</span>)<span class="op">;</span></span>
+<span id="cb6-76"><a href="#cb6-76" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode matlab"><code class="sourceCode matlab"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">% Youssef Beltagy</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co">% BEE235A, Aut 2021, Vocoder Project</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co">% chimera_run.m - A helper function</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co">% to easily load sounds and run the chimera.</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co">%arguments</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="co">%        i(1,1) int8 = 0; % the index of first sound to use</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co">%        j(1,1) int8 = 1; % the index of the second sound to use</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="co">%        mode(1,1) string = &quot;both&quot;; % the running mode: original, chimera, both, reverse</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="co">%        num_bands(1,1) = 8; % chimera number of bands</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="co">%        chimera_mode(1,1) string = &quot;no-swap&quot;;  % the chimera mode: swap, no-swap</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="co">%examples</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="co">%   chimera_run() % runs all 25 sounds and plays both original signals and</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="co">%   the chimera signal.</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="co">%   chimera_run(0) same as above</span></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a><span class="co">%   chimera_run(i,j) runs the chimera with sentences i and j which have to</span></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a><span class="co">%   be in the range [1,27];</span></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a><span class="co">%   chimera_run(i, j, mode) mode chooses whether you play just the original</span></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a><span class="co">%                       signals, just the chimera signal, all signals,</span></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a><span class="co">%                       or the original and chimera signals in reverse order.</span></span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a><span class="co">%   chimera_run(i, j, mode, num_bands, chimera_mode) num_bands and chimera_mode</span></span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a><span class="co">%                       specify different running modes for the chimera.</span></span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a><span class="co">%                       num_bands decides the number of bands of the</span></span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a><span class="co">%                       chimera.</span></span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a><span class="co">%                       chimera_mode decides whether the chimera flips</span></span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a><span class="co">%                       between the signals or not.</span></span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="va">chimera_run</span>(<span class="va">i</span><span class="op">,</span> <span class="va">j</span><span class="op">,</span> <span class="va">mode</span><span class="op">,</span> <span class="va">num_bands</span><span class="op">,</span> <span class="va">chimera_mode</span>)</span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>    <span class="va">arguments</span></span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>        <span class="va">i</span>(<span class="fl">1</span><span class="op">,</span><span class="fl">1</span>) <span class="va">int8</span> <span class="op">=</span> <span class="fl">0</span><span class="op">;</span> <span class="co">% the index of first sound to use</span></span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>        <span class="va">j</span>(<span class="fl">1</span><span class="op">,</span><span class="fl">1</span>) <span class="va">int8</span> <span class="op">=</span> <span class="fl">1</span><span class="op">;</span> <span class="co">% the index of the second sound to use</span></span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>        <span class="va">mode</span>(<span class="fl">1</span><span class="op">,</span><span class="fl">1</span>) <span class="va">string</span> <span class="op">=</span> <span class="st">&quot;both&quot;</span><span class="op">;</span> <span class="co">% the running mode: original, chimera, both, reverse</span></span>
+<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>        <span class="va">num_bands</span>(<span class="fl">1</span><span class="op">,</span><span class="fl">1</span>) <span class="op">=</span> <span class="fl">8</span><span class="op">;</span> <span class="co">% chimera number of bands</span></span>
+<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a>        <span class="va">chimera_mode</span>(<span class="fl">1</span><span class="op">,</span><span class="fl">1</span>) <span class="va">string</span> <span class="op">=</span> <span class="st">&quot;no-swap&quot;</span><span class="op">;</span>  <span class="co">% the chimera mode: swap, no-swap</span></span>
+<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a>    <span class="kw">end</span></span>
+<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a><span class="co">% Choose Mode</span></span>
+<span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a><span class="co">% defualt is to play both original and vocoded sound</span></span>
+<span id="cb7-38"><a href="#cb7-38" aria-hidden="true" tabindex="-1"></a><span class="va">play</span> <span class="op">=</span> <span class="op">@</span><span class="va">play_sound</span><span class="op">;</span> </span>
+<span id="cb7-39"><a href="#cb7-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-40"><a href="#cb7-40" aria-hidden="true" tabindex="-1"></a><span class="kw">if</span>(<span class="va">strcmp</span>(<span class="va">mode</span><span class="op">,</span><span class="ss">&#39;original&#39;</span>))</span>
+<span id="cb7-41"><a href="#cb7-41" aria-hidden="true" tabindex="-1"></a>    <span class="va">play</span> <span class="op">=</span> <span class="op">@</span><span class="va">play_original</span><span class="op">;</span></span>
+<span id="cb7-42"><a href="#cb7-42" aria-hidden="true" tabindex="-1"></a><span class="kw">elseif</span>(<span class="va">strcmp</span>(<span class="va">mode</span><span class="op">,</span><span class="ss">&#39;chimera&#39;</span>))</span>
+<span id="cb7-43"><a href="#cb7-43" aria-hidden="true" tabindex="-1"></a>    <span class="va">play</span> <span class="op">=</span> <span class="op">@</span><span class="va">play_chimera</span><span class="op">;</span></span>
+<span id="cb7-44"><a href="#cb7-44" aria-hidden="true" tabindex="-1"></a><span class="kw">elseif</span>(<span class="va">strcmp</span>(<span class="va">mode</span><span class="op">,</span><span class="ss">&#39;reverse&#39;</span>))</span>
+<span id="cb7-45"><a href="#cb7-45" aria-hidden="true" tabindex="-1"></a>    <span class="va">play</span> <span class="op">=</span> <span class="op">@</span><span class="va">play_sound_rev</span><span class="op">;</span></span>
+<span id="cb7-46"><a href="#cb7-46" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb7-47"><a href="#cb7-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-48"><a href="#cb7-48" aria-hidden="true" tabindex="-1"></a><span class="kw">if</span> (<span class="va">j</span> <span class="op">&gt;</span> <span class="fl">27</span> <span class="op">||</span> <span class="va">j</span> <span class="op">&lt;</span> <span class="fl">1</span>)</span>
+<span id="cb7-49"><a href="#cb7-49" aria-hidden="true" tabindex="-1"></a>    <span class="kw">return</span></span>
+<span id="cb7-50"><a href="#cb7-50" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb7-51"><a href="#cb7-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-52"><a href="#cb7-52" aria-hidden="true" tabindex="-1"></a>[<span class="va">sig2</span><span class="op">,</span><span class="va">Fs2</span>] <span class="op">=</span> <span class="va">audioread_mono</span>(<span class="va">j</span>)<span class="op">;</span></span>
+<span id="cb7-53"><a href="#cb7-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-54"><a href="#cb7-54" aria-hidden="true" tabindex="-1"></a><span class="co">% Play Sound    </span></span>
+<span id="cb7-55"><a href="#cb7-55" aria-hidden="true" tabindex="-1"></a><span class="kw">if</span> <span class="va">i</span> <span class="op">==</span> <span class="fl">0</span></span>
+<span id="cb7-56"><a href="#cb7-56" aria-hidden="true" tabindex="-1"></a>    <span class="kw">for</span> <span class="va">n</span><span class="op">=</span><span class="fl">1</span><span class="op">:</span><span class="fl">25</span></span>
+<span id="cb7-57"><a href="#cb7-57" aria-hidden="true" tabindex="-1"></a>    [<span class="va">sig1</span><span class="op">,</span><span class="va">Fs1</span>] <span class="op">=</span> <span class="va">audioread_mono</span>(<span class="va">n</span>)<span class="op">;</span></span>
+<span id="cb7-58"><a href="#cb7-58" aria-hidden="true" tabindex="-1"></a>    <span class="va">play</span>(<span class="va">sig1</span><span class="op">,</span> <span class="va">Fs1</span><span class="op">,</span> <span class="va">sig2</span><span class="op">,</span> <span class="va">Fs2</span><span class="op">,</span> <span class="va">num_bands</span><span class="op">,</span> <span class="va">chimera_mode</span>)<span class="op">;</span></span>
+<span id="cb7-59"><a href="#cb7-59" aria-hidden="true" tabindex="-1"></a>    <span class="kw">end</span></span>
+<span id="cb7-60"><a href="#cb7-60" aria-hidden="true" tabindex="-1"></a><span class="kw">elseif</span> <span class="va">i</span> <span class="op">&gt;</span> <span class="fl">0</span> <span class="op">&amp;&amp;</span> <span class="va">i</span> <span class="op">&lt;=</span> <span class="fl">27</span></span>
+<span id="cb7-61"><a href="#cb7-61" aria-hidden="true" tabindex="-1"></a>    [<span class="va">sig1</span><span class="op">,</span><span class="va">Fs1</span>] <span class="op">=</span> <span class="va">audioread_mono</span>(<span class="va">i</span>)<span class="op">;</span></span>
+<span id="cb7-62"><a href="#cb7-62" aria-hidden="true" tabindex="-1"></a>    <span class="va">play</span>(<span class="va">sig1</span><span class="op">,</span> <span class="va">Fs1</span><span class="op">,</span> <span class="va">sig2</span><span class="op">,</span> <span class="va">Fs2</span><span class="op">,</span> <span class="va">num_bands</span><span class="op">,</span> <span class="va">chimera_mode</span>)<span class="op">;</span></span>
+<span id="cb7-63"><a href="#cb7-63" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb7-64"><a href="#cb7-64" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb7-65"><a href="#cb7-65" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb7-66"><a href="#cb7-66" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-67"><a href="#cb7-67" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="va">play_original</span>(<span class="va">sig1</span><span class="op">,</span> <span class="va">Fs1</span><span class="op">,</span> <span class="va">sig2</span><span class="op">,</span> <span class="va">Fs2</span><span class="op">,</span> <span class="op">~,</span> <span class="op">~</span>)</span>
+<span id="cb7-68"><a href="#cb7-68" aria-hidden="true" tabindex="-1"></a>    <span class="va">sound</span>(<span class="va">sig1</span><span class="op">,</span><span class="va">Fs1</span>)<span class="op">;</span></span>
+<span id="cb7-69"><a href="#cb7-69" aria-hidden="true" tabindex="-1"></a>    <span class="va">pause</span>(<span class="va">length</span>(<span class="va">sig1</span>)<span class="op">/</span><span class="va">Fs1</span> <span class="op">+</span> <span class="fl">0.5</span>)<span class="op">;</span></span>
+<span id="cb7-70"><a href="#cb7-70" aria-hidden="true" tabindex="-1"></a>    <span class="va">sound</span>(<span class="va">sig2</span><span class="op">,</span><span class="va">Fs2</span>)<span class="op">;</span></span>
+<span id="cb7-71"><a href="#cb7-71" aria-hidden="true" tabindex="-1"></a>    <span class="va">pause</span>(<span class="va">length</span>(<span class="va">sig2</span>)<span class="op">/</span><span class="va">Fs2</span> <span class="op">+</span> <span class="fl">0.5</span>)<span class="op">;</span></span>
+<span id="cb7-72"><a href="#cb7-72" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb7-73"><a href="#cb7-73" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-74"><a href="#cb7-74" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="va">play_chimera</span>(<span class="va">sig1</span><span class="op">,</span> <span class="va">Fs1</span><span class="op">,</span> <span class="va">sig2</span><span class="op">,</span> <span class="va">Fs2</span><span class="op">,</span> <span class="va">num_bands</span><span class="op">,</span> <span class="va">chimera_mode</span>)</span>
+<span id="cb7-75"><a href="#cb7-75" aria-hidden="true" tabindex="-1"></a>    [<span class="va">os</span><span class="op">,</span><span class="va">Fs</span>] <span class="op">=</span> <span class="va">chimera</span>(<span class="va">sig1</span><span class="op">,</span> <span class="va">Fs1</span><span class="op">,</span> <span class="va">sig2</span><span class="op">,</span> <span class="va">Fs2</span><span class="op">,</span> <span class="va">num_bands</span><span class="op">,</span> <span class="va">chimera_mode</span>)<span class="op">;</span></span>
+<span id="cb7-76"><a href="#cb7-76" aria-hidden="true" tabindex="-1"></a>    <span class="va">sound</span>(<span class="va">os</span><span class="op">,</span> <span class="va">Fs</span>)<span class="op">;</span></span>
+<span id="cb7-77"><a href="#cb7-77" aria-hidden="true" tabindex="-1"></a>    <span class="va">pause</span>(<span class="va">length</span>(<span class="va">os</span>)<span class="op">/</span><span class="va">Fs</span> <span class="op">+</span> <span class="fl">0.5</span>)<span class="op">;</span></span>
+<span id="cb7-78"><a href="#cb7-78" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb7-79"><a href="#cb7-79" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-80"><a href="#cb7-80" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="va">play_sound</span>(<span class="va">sig1</span><span class="op">,</span> <span class="va">Fs1</span><span class="op">,</span> <span class="va">sig2</span><span class="op">,</span> <span class="va">Fs2</span><span class="op">,</span> <span class="va">num_bands</span><span class="op">,</span> <span class="va">chimera_mode</span>)</span>
+<span id="cb7-81"><a href="#cb7-81" aria-hidden="true" tabindex="-1"></a>    <span class="va">play_original</span>(<span class="va">sig1</span><span class="op">,</span> <span class="va">Fs1</span><span class="op">,</span> <span class="va">sig2</span><span class="op">,</span> <span class="va">Fs2</span><span class="op">,</span> <span class="va">num_bands</span><span class="op">,</span> <span class="va">chimera_mode</span>)<span class="op">;</span></span>
+<span id="cb7-82"><a href="#cb7-82" aria-hidden="true" tabindex="-1"></a>    <span class="va">play_chimera</span>(<span class="va">sig1</span><span class="op">,</span> <span class="va">Fs1</span><span class="op">,</span> <span class="va">sig2</span><span class="op">,</span> <span class="va">Fs2</span><span class="op">,</span> <span class="va">num_bands</span><span class="op">,</span> <span class="va">chimera_mode</span>)<span class="op">;</span></span>
+<span id="cb7-83"><a href="#cb7-83" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb7-84"><a href="#cb7-84" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-85"><a href="#cb7-85" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="va">play_sound_rev</span>(<span class="va">sig1</span><span class="op">,</span> <span class="va">Fs1</span><span class="op">,</span> <span class="va">sig2</span><span class="op">,</span> <span class="va">Fs2</span><span class="op">,</span> <span class="va">num_bands</span><span class="op">,</span> <span class="va">chimera_mode</span>)</span>
+<span id="cb7-86"><a href="#cb7-86" aria-hidden="true" tabindex="-1"></a>    <span class="va">play_chimera</span>(<span class="va">sig1</span><span class="op">,</span> <span class="va">Fs1</span><span class="op">,</span> <span class="va">sig2</span><span class="op">,</span> <span class="va">Fs2</span><span class="op">,</span> <span class="va">num_bands</span><span class="op">,</span> <span class="va">chimera_mode</span>)<span class="op">;</span></span>
+<span id="cb7-87"><a href="#cb7-87" aria-hidden="true" tabindex="-1"></a>    <span class="va">play_original</span>(<span class="va">sig1</span><span class="op">,</span> <span class="va">Fs1</span><span class="op">,</span> <span class="va">sig2</span><span class="op">,</span> <span class="va">Fs2</span><span class="op">,</span> <span class="va">num_bands</span><span class="op">,</span> <span class="va">chimera_mode</span>)<span class="op">;</span></span>
+<span id="cb7-88"><a href="#cb7-88" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode matlab"><code class="sourceCode matlab"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">% Youssef Beltagy</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co">% BEE235A, Aut 2021, Vocoder Project</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co">% plots.m - Generates plots</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>[<span class="va">ss</span><span class="op">,</span> <span class="va">Fs</span>] <span class="op">=</span> <span class="va">audioread</span>(<span class="st">&quot;sounds/sent007.wav&quot;</span>)<span class="op">;</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="va">make_spectrogram</span>(<span class="va">ss</span><span class="op">,</span><span class="va">Fs</span><span class="op">,</span><span class="st">&quot;Original Signal Spectrogram&quot;</span>)<span class="op">;</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="va">os</span> <span class="op">=</span> <span class="va">vocode</span>(<span class="va">ss</span><span class="op">,</span><span class="va">Fs</span><span class="op">,</span><span class="fl">1</span>)<span class="op">;</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="va">make_spectrogram</span>(<span class="va">os</span><span class="op">,</span><span class="va">Fs</span><span class="op">,</span><span class="st">&quot;Vocoded (1 sine band) Signal Spectrogram&quot;</span>)<span class="op">;</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="va">os</span> <span class="op">=</span> <span class="va">vocode</span>(<span class="va">ss</span><span class="op">,</span><span class="va">Fs</span><span class="op">,</span><span class="fl">4</span>)<span class="op">;</span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="va">make_spectrogram</span>(<span class="va">os</span><span class="op">,</span><span class="va">Fs</span><span class="op">,</span><span class="st">&quot;Vocoded (4 sine band) Signal Spectrogram&quot;</span>)<span class="op">;</span></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a><span class="va">plot_input_output</span>(<span class="va">ss</span><span class="op">,</span> <span class="va">os</span><span class="op">,</span> <span class="va">Fs</span>)<span class="op">;</span></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a><span class="va">os</span> <span class="op">=</span> <span class="va">vocode</span>(<span class="va">ss</span><span class="op">,</span><span class="va">Fs</span><span class="op">,</span><span class="fl">1</span><span class="op">,</span> <span class="st">&quot;noise&quot;</span>)<span class="op">;</span></span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a><span class="va">make_spectrogram</span>(<span class="va">os</span><span class="op">,</span><span class="va">Fs</span><span class="op">,</span><span class="st">&quot;Vocoded (1 noise band) Signal Spectrogram&quot;</span>)<span class="op">;</span></span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a><span class="va">os</span> <span class="op">=</span> <span class="va">vocode</span>(<span class="va">ss</span><span class="op">,</span><span class="va">Fs</span><span class="op">,</span><span class="fl">4</span><span class="op">,</span> <span class="st">&quot;noise&quot;</span>)<span class="op">;</span></span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a><span class="va">make_spectrogram</span>(<span class="va">os</span><span class="op">,</span><span class="va">Fs</span><span class="op">,</span><span class="st">&quot;Vocoded (4 noise band) Signal Spectrogram&quot;</span>)<span class="op">;</span></span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a><span class="va">plot_lpf</span>(<span class="va">Fs</span>)<span class="op">;</span></span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="va">make_spectrogram</span>(<span class="va">ss</span><span class="op">,</span><span class="va">Fs</span><span class="op">,</span><span class="va">plot_title</span>)</span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a><span class="va">figure</span>()<span class="op">;</span></span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>[<span class="va">s</span><span class="op">,</span> <span class="va">f</span><span class="op">,</span> <span class="va">t</span>] <span class="op">=</span> <span class="va">spectrogram</span>(<span class="va">ss</span><span class="op">,</span> <span class="va">hamming</span>(<span class="fl">512</span>)<span class="op">,</span> <span class="fl">4</span><span class="op">,</span> <span class="fl">1024</span><span class="op">,</span> <span class="va">Fs</span>)<span class="op">;</span> </span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a><span class="va">surf</span>(<span class="va">t</span><span class="op">,</span> <span class="va">f</span><span class="op">,</span> <span class="fl">20</span><span class="op">*</span><span class="va">log10</span>(<span class="va">abs</span>(<span class="va">s</span>))<span class="op">,</span> <span class="ss">&#39;EdgeColor&#39;</span><span class="op">,</span> <span class="ss">&#39;none&#39;</span>)<span class="op">;</span> </span>
+<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a><span class="va">colormap</span>(<span class="va">jet</span>)<span class="op">;</span></span>
+<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a><span class="va">view</span>(<span class="fl">0</span><span class="op">,</span><span class="fl">90</span>)<span class="op">;</span></span>
+<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a><span class="va">title</span>(<span class="va">plot_title</span>)<span class="op">;</span></span>
+<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a><span class="va">xlabel</span>(<span class="st">&quot;Time / s&quot;</span>)<span class="op">;</span></span>
+<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a><span class="va">ylabel</span>(<span class="st">&quot;Frequency / Hz&quot;</span>)<span class="op">;</span></span>
+<span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb8-35"><a href="#cb8-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-36"><a href="#cb8-36" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="va">plot_lpf</span>(<span class="va">Fs</span>)</span>
+<span id="cb8-37"><a href="#cb8-37" aria-hidden="true" tabindex="-1"></a><span class="va">figure</span>()</span>
+<span id="cb8-38"><a href="#cb8-38" aria-hidden="true" tabindex="-1"></a>[<span class="va">bb</span><span class="op">,</span><span class="va">aa</span>]<span class="op">=</span><span class="va">butter</span>(<span class="fl">2</span><span class="op">,</span><span class="fl">400</span><span class="op">/</span>(<span class="va">Fs</span><span class="op">/</span><span class="fl">2</span>))<span class="op">;</span></span>
+<span id="cb8-39"><a href="#cb8-39" aria-hidden="true" tabindex="-1"></a>[<span class="va">H</span><span class="op">,</span><span class="va">F</span>]<span class="op">=</span><span class="va">freqz</span>(<span class="va">bb</span><span class="op">,</span><span class="va">aa</span><span class="op">,</span><span class="fl">256</span><span class="op">,</span><span class="va">Fs</span>)<span class="op">;</span> </span>
+<span id="cb8-40"><a href="#cb8-40" aria-hidden="true" tabindex="-1"></a><span class="va">plot</span>(<span class="va">F</span><span class="op">,</span><span class="va">abs</span>(<span class="va">H</span>))<span class="op">;</span></span>
+<span id="cb8-41"><a href="#cb8-41" aria-hidden="true" tabindex="-1"></a><span class="va">title</span>(<span class="st">&quot;LPF Filter&quot;</span>)<span class="op">;</span></span>
+<span id="cb8-42"><a href="#cb8-42" aria-hidden="true" tabindex="-1"></a><span class="va">ylabel</span>(<span class="st">&quot;Amplitude&quot;</span>)<span class="op">;</span></span>
+<span id="cb8-43"><a href="#cb8-43" aria-hidden="true" tabindex="-1"></a><span class="va">xlabel</span>(<span class="st">&quot;Frequency / Hz&quot;</span>)<span class="op">;</span></span>
+<span id="cb8-44"><a href="#cb8-44" aria-hidden="true" tabindex="-1"></a><span class="va">xlim</span>([<span class="fl">0</span> <span class="fl">6000</span>])<span class="op">;</span></span>
+<span id="cb8-45"><a href="#cb8-45" aria-hidden="true" tabindex="-1"></a><span class="va">ylim</span>([<span class="fl">0</span><span class="op">,</span><span class="fl">1</span>])<span class="op">;</span></span>
+<span id="cb8-46"><a href="#cb8-46" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb8-47"><a href="#cb8-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-48"><a href="#cb8-48" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="va">plot_input_output</span>(<span class="va">ss</span><span class="op">,</span> <span class="va">os</span><span class="op">,</span> <span class="va">Fs</span>)</span>
+<span id="cb8-49"><a href="#cb8-49" aria-hidden="true" tabindex="-1"></a><span class="va">t</span> <span class="op">=</span> (<span class="fl">0</span><span class="op">:</span>(<span class="va">length</span>(<span class="va">ss</span>) <span class="op">-</span> <span class="fl">1</span>)) <span class="op">./</span> <span class="va">Fs</span><span class="op">;</span></span>
+<span id="cb8-50"><a href="#cb8-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-51"><a href="#cb8-51" aria-hidden="true" tabindex="-1"></a><span class="va">figure</span>()<span class="op">;</span></span>
+<span id="cb8-52"><a href="#cb8-52" aria-hidden="true" tabindex="-1"></a><span class="va">layout</span> <span class="op">=</span> <span class="va">tiledlayout</span>(<span class="fl">2</span><span class="op">,</span><span class="fl">1</span>)<span class="op">;</span></span>
+<span id="cb8-53"><a href="#cb8-53" aria-hidden="true" tabindex="-1"></a><span class="va">title</span>(<span class="va">layout</span><span class="op">,</span> <span class="st">&quot;Sentence 7 Input/Output with 4 sine bands&quot;</span>)<span class="op">;</span></span>
+<span id="cb8-54"><a href="#cb8-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-55"><a href="#cb8-55" aria-hidden="true" tabindex="-1"></a><span class="va">nexttile</span><span class="op">;</span></span>
+<span id="cb8-56"><a href="#cb8-56" aria-hidden="true" tabindex="-1"></a><span class="va">plot</span>(<span class="va">t</span><span class="op">,</span> <span class="va">ss</span>)</span>
+<span id="cb8-57"><a href="#cb8-57" aria-hidden="true" tabindex="-1"></a><span class="va">title</span>(<span class="st">&quot;Input&quot;</span>)<span class="op">;</span></span>
+<span id="cb8-58"><a href="#cb8-58" aria-hidden="true" tabindex="-1"></a><span class="va">ylabel</span>(<span class="st">&quot;Amplitude&quot;</span>)<span class="op">;</span></span>
+<span id="cb8-59"><a href="#cb8-59" aria-hidden="true" tabindex="-1"></a><span class="va">xlabel</span>(<span class="st">&quot;Time / s&quot;</span>)<span class="op">;</span></span>
+<span id="cb8-60"><a href="#cb8-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-61"><a href="#cb8-61" aria-hidden="true" tabindex="-1"></a><span class="va">nexttile</span><span class="op">;</span></span>
+<span id="cb8-62"><a href="#cb8-62" aria-hidden="true" tabindex="-1"></a><span class="va">plot</span>(<span class="va">t</span><span class="op">,</span> <span class="va">os</span>)</span>
+<span id="cb8-63"><a href="#cb8-63" aria-hidden="true" tabindex="-1"></a><span class="va">title</span>(<span class="st">&quot;Output&quot;</span>)<span class="op">;</span></span>
+<span id="cb8-64"><a href="#cb8-64" aria-hidden="true" tabindex="-1"></a><span class="va">ylabel</span>(<span class="st">&quot;Amplitude&quot;</span>)<span class="op">;</span></span>
+<span id="cb8-65"><a href="#cb8-65" aria-hidden="true" tabindex="-1"></a><span class="va">xlabel</span>(<span class="st">&quot;Time / s&quot;</span>)<span class="op">;</span></span>
+<span id="cb8-66"><a href="#cb8-66" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code></pre></div>
+</body>
+</html>

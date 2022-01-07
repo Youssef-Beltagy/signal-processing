@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="Youssef Beltagy AUT21 BEE 235" />
+  <title> Lab 1 Report: Matlab Functions and Scripts </title>
+  <style>
+    html {
+      line-height: 1.5;
+      font-family: Georgia, serif;
+      font-size: 20px;
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      word-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 1em;
+      }
+    }
+    @media print {
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, 'Lucida Console', Consolas, monospace;
+      font-size: 85%;
+      margin: 0;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      background-color: #1a1a1a;
+      border: none;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title"> <span class="smallcaps">Lab 1 Report: Matlab Functions and Scripts</span> </h1>
+<p class="author"><span>Youssef Beltagy</span><br />
+<span class="smallcaps">AUT21 BEE 235</span></p>
+</header>
+<h1 id="abstract">Abstract</h1>
+<p>This lab is an introduction to writing functions and manipulating sound signals.</p>
+<h1 id="part-1-exercise-1">Part 1 Exercise 1</h1>
+<p>For 1, the output is i. This is because Matlab recognizes and can handle complex number. The imaginary component (i) of complex numbers is the sqrt(-1) by definition. The result makes sense.<br />
+For 2, I got 2i. Matlab allows representing the imaginary number i as either an i or a j. Thus, <span class="math inline"><em>i</em> + <em>j</em> = <em>i</em> + <em>i</em> = 2 ⋅ <em>i</em></span>. The result makes sense.<br />
+For 3, please see the code. The angle is in radians (0.785 vs 45 degrees). The magnitude is the result from abs(). The angle is from angle(). The real and imaginary components are from real() and imag()<br />
+For 4, from the code, the magnitude of the sum is 3.4023.</p>
+<pre><code>&gt;&gt; sqrt(-1)
+
+ans =
+
+   0.0000 + 1.0000i
+
+&gt;&gt; i+j
+
+ans =
+
+   0.0000 + 2.0000i
+
+&gt;&gt; z1 = 1 + j;
+&gt;&gt; abs(z1)
+
+ans =
+
+    1.4142
+
+&gt;&gt; angle(z1)
+
+ans =
+
+    0.7854
+
+&gt;&gt; real(z1)
+
+ans =
+
+     1
+
+&gt;&gt; imag(z1)
+
+ans =
+
+     1
+
+&gt;&gt; z2=2*exp(j*3/pi)
+
+z2 =
+
+   1.1553 + 1.6325i
+
+&gt;&gt; abs(z1+z2)
+
+ans =
+
+    3.4023
+</code></pre>
+<h1 id="part-1-exercise-2">Part 1 Exercise 2</h1>
+<p>x1 can be represented as <span class="math inline"><em>t</em><em>c</em><em>o</em><em>s</em>(<em>t</em>) + <em>j</em><em>t</em><em>s</em><em>i</em><em>n</em>(<em>t</em>)</span> .This representation clearly shows that x1 has an odd real number (t is odd and cos(t) is even, so tcos(t) is an odd signal) and even imaginary number (t is odd and sin is odd, so their multiplication is an even signal).<br />
+<img src="Exercise2.png" alt="image" /></p>
+<pre><code>t = -10:0.1:10;
+x1= t .* exp(j*t);
+layout = tiledlayout(2,1);
+title(layout, &quot;Exercise 2: x_1 = te^{jt}&quot;);
+nexttile
+plot(t,real(x1))
+title(&quot;real signal&quot;)
+ylabel(&quot;magnitude&quot;)
+xlabel(&quot;time /s&quot;)
+nexttile
+plot(t,imag(x1))
+title(&quot;imaginary signal&quot;)
+xlabel(&quot;time&quot;)
+ylabel(&quot;magnitude&quot;)</code></pre>
+<h1 id="part-1-exercise-3">Part 1 Exercise 3</h1>
+<p>To double the period, I halved the frequency.</p>
+<p><img src="Exercise3.png" alt="image" /></p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode matlab"><code class="sourceCode matlab"></code></pre></div>
+<h1 id="part-1-exercise-4">Part 1 Exercise 4</h1>
+<p>The period of the second signal is <span class="math inline">$\frac{1}{F}$</span>. <span class="math inline">$F = \frac{\pi}{2 \pi}$</span>. Thus, the period is <span class="math inline">$\frac{2\pi}{\pi} = 2$</span> seconds.<br />
+The two signals have the same envelope which exponentially decays with respect to time.<br />
+The third signal would have half the period but twice the frequency of the first signal. In comparison to the second signal, the third signal would have a fourth of the period but four times the frequency. They will still have the same envelope.</p>
+<h1 id="part-1-exercise-5">Part 1 Exercise 5</h1>
+<p>Below are the original signal, the signal with higher frequency, and the signal with faster decay.</p>
+<p><img src="Exercise5_original.png" alt="image" /></p>
+<p><img src="Exercise5_higherfrequency.png" alt="image" /></p>
+<p><img src="Exercise5_higherdecay.png" alt="image" /></p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode matlab"><code class="sourceCode matlab"></code></pre></div>
+<h1 id="part-1-exercise-6">Part 1 Exercise 6</h1>
+<p>Plotting a function of the form of <span class="math inline"><em>f</em>(<em>t</em>) = 3<em>e</em><sup> − <em>j</em>(2<em>π</em>)<em>t</em></sup></span> with respect to its real components and its imaginary components will result in a circle because <span class="math inline"><em>e</em><sup> − <em>j</em>2<em>π</em><em>t</em></sup> = 3<em>c</em><em>o</em><em>s</em>(−2<em>π</em><em>t</em>) + 3<em>j</em><em>s</em><em>i</em><em>n</em>(−2<em>π</em><em>t</em>)</span> is the unit circle multiplied by 3.<br />
+Multiplying the <span class="math inline"><em>f</em>(<em>t</em>)</span> by something of the form <span class="math inline"><em>g</em>(<em>t</em>) = <em>e</em><sup> − 0.25<em>t</em></sup></span> causes the function to decay with time. Together with the circle, this makes a spiral (in 2D as you can see below). So the magnitude starts at an initial value of 3 and exponentially decays to almost zero because of <span class="math inline"><em>g</em>(<em>t</em>)</span>.<br />
+<img src="Spiral.png" alt="image" /></p>
+<p>If the function is plotted with respect to time too, the circle will be expanded into a helix. The spiral will be expanded into a helix with decaying radius which is what we see in the 3D plot.<br />
+Now, let me explain each of the 5 subplots in the original complex exponential function. The 3d plot is the helix with decaying radius I explained. When I doubled the frequency, the helix had more cycles within the same amount of time. When I hastened the decay, the helix decayed into a line-like signal much faster.<br />
+The top left 2d image is the exponential decay function I earlier called <span class="math inline"><em>g</em>(<em>t</em>)</span> except that it is multiplied by 3 to be <span class="math inline">3<em>g</em>(<em>t</em>)</span>. There is no difference between the original and double frequency versions of this plot. But clearly, the faster decay function has its magnitude approach 0 much faster than the original one.<br />
+The top right image shows the angle of the function. The angle starts at 0, then decreases to <span class="math inline"> − <em>π</em></span>. Then the angle wraps around to <span class="math inline"><em>π</em></span>, then decreases to <span class="math inline"> − <em>π</em></span> again and repeats the cycle. The angle is decreasing at a linear rate but matlab will convert any value (<span class="math inline"><em>v</em><em>a</em><em>l</em></span>) below <span class="math inline"> − <em>π</em></span>, to <span class="math inline">2<em>π</em> + <em>v</em><em>a</em><em>l</em></span> because the function originally was a circle. This is the explanation for the zigzagging pattern. Though there is no difference between the faster decay and original versions of this plot, clearly the higher frequency version has shorter periods.<br />
+The bottom 2d images are the real and imaginary parts of the function. Normally, they should be cosine and sine respectively. But because of the exponential decay, they are decaying cosine and sine functions. The envelope for both of the plots is the top left image that shows the exponential decay.<br />
+The bottom 2d images demonstrate both effects of faster decay and higher frequency. When the decay was faster, the plots had an envelop that decayed to 0 much faster. When the frequency was higher, the plots clearly showed faster oscillations.<br />
+The 2d subplots show that my functions really are a higher frequency and a faster decay versions in that order.</p>
+<h1 id="part-2-exercise-0">Part 2 Exercise 0</h1>
+<p>Load loads saved variables or data from a file or a location into the workspace (memory) so that you can refer to and use the data.<br />
+linspace(X1, X2, N) generates N points between X1 and X2. The points are uniformly distributed and equidistant from their neighbors. They increase in a linear manner. In effect, it starts with the first element being X1, and generates the remaining (N-1) elements where each element is equal to the previous element plus (X2-X1)/(N-1). The only exception is when N is 1, then the vector simply contains X2.</p>
+<pre><code>&gt;&gt; help linspace
+ linspace Linearly spaced vector.
+    linspace(X1, X2) generates a row vector of 100 linearly
+    equally spaced points between X1 and X2.
+ 
+    linspace(X1, X2, N) generates N points between X1 and X2.
+    For N = 1, linspace returns X2.
+ 
+    Class support for inputs X1,X2:
+       float: double, single
+ 
+    See also logspace, colon.
+
+    Documentation for linspace
+    Other functions named linspace</code></pre>
+<h1 id="part-2-exercise-1-fader">Part 2 Exercise 1 Fader</h1>
+<p>I implemented the fade function but with a small optimization. Instead of multiplying level at the last line, I used it to generate the values in the linspace line.<br />
+Here is the fade function.<br />
+</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode matlab"><code class="sourceCode matlab"></code></pre></div>
+<p>Here is the testing code for the fade function.<br />
+</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode matlab"><code class="sourceCode matlab"></code></pre></div>
+<p>Here is the output for the fade function.<br />
+<img src="fade0.png" alt="image" /></p>
+<p><img src="fade0.1.png" alt="image" /></p>
+<p><img src="fade0.2.png" alt="image" /></p>
+<p><img src="fade0.5.png" alt="image" /></p>
+<p><img src="fade0.7.png" alt="image" /></p>
+<p><img src="fade0.8.png" alt="image" /></p>
+<p><img src="fade1.png" alt="image" /></p>
+<h1 id="part-2-exercise-2-repeater">Part 2 Exercise 2 Repeater</h1>
+<p>I implemented the repeater with the optional parameter to insert silence. Please compare the time of the repeated signal with the one with silence. As you can see, the one with silence has time values up to <span class="math inline">1.5 ⋅ 10<sup>5</sup></span> while the one without silence only goes up to <span class="math inline">7.2 ⋅ 10<sup>4</sup></span>.</p>
+<p>Here is the repeat function.<br />
+</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode matlab"><code class="sourceCode matlab"></code></pre></div>
+<p>Here is the testing code for the repeat function.<br />
+</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode matlab"><code class="sourceCode matlab"></code></pre></div>
+<p>Here is the output for the repeat function.<br />
+<img src="repeater.png" alt="image" /></p>
+<h1 id="part-2-exercise-3-shifter">Part 2 Exercise 3 Shifter</h1>
+<p>I implemented the delay function so that it can both delay and hasten. I implemented checks so that it doesn’t fail whether the delay is positive, negative, or bigger than the length of the signal.<br />
+I used Matlab’s testing functionalities for the first time.<br />
+Here is the delay function.<br />
+</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode matlab"><code class="sourceCode matlab"></code></pre></div>
+<p>Here is the testing code for the delay function.<br />
+</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode matlab"><code class="sourceCode matlab"></code></pre></div>
+<p>Here is the output for the delay function.<br />
+<img src="delay.png" alt="image" /></p>
+<h1 id="part-2-exercise-4-mixer">Part 2 Exercise 4 Mixer</h1>
+<p>In this exercise, I created a mixer that adds two signals together and then normalizes the sound such that all the sounds are in the range of [-1,1].<br />
+If the sounds are not normalized, matlab will clip values that are outside the range of [-1,1]. My understanding is that this is clamping. The good thing is matlab won’t crash. The bad thing is that the noise ratio with respect to the actual signal will increase and the signal will become more noisy. It also makes it so all clipped sounds are equally loud when maybe they weren’t in the original signal.<br />
+Here is the mixer function.<br />
+</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode matlab"><code class="sourceCode matlab"></code></pre></div>
+<p>Here is the testing code for the mixer function.<br />
+</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode matlab"><code class="sourceCode matlab"></code></pre></div>
+<p>Here is the output for the mixer function.<br />
+<img src="mixer.png" alt="image" /></p>
+<h1 id="conclusion">Conclusion</h1>
+<p>In this lab, I experimented with Matlab’s complex numbers. I experimented with playing sounds in Matlab. I created matlab functions that can delay, hasten, repeat, and mix sounds and plotted the sounds.</p>
+</body>
+</html>
