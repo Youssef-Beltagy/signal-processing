@@ -202,9 +202,9 @@ In this section, we synthesized a square wave signal using a fourier series.
 When the number of coefficients is low, the synthesized signal displays the Gibbs
 phenomenon where the signal overshoots and undershoots at sharp transitions.
 
-\subsection{C\_k Phase and Magnitude}
+\subsection{$C_k$ Phase and Magnitude}
 
-We generated and plotted the C\_k coefficients of the fourier series
+We generated and plotted the $C_k$ coefficients of the fourier series
 we used to synthesize the square wave.\\
 
 Below you can see the magnitudes and phases of the coefficients.
@@ -218,7 +218,7 @@ Below you can see the magnitudes and phases of the coefficients.
 \subsection{Square Wave Synthesis}
 
 We developed a function that generates an approximation of a square wave
-given the time of the signal and the K\_{max} of the coefficients.
+given the time of the signal and the $K_{max}$ of the coefficients.
 
 \begin{framed}
 	\lstinputlisting{squarewave.m}
@@ -228,7 +228,7 @@ given the time of the signal and the K\_{max} of the coefficients.
 \subsection{Square Wave Plots}
 
 We plotted the output from our synthesizing function.
-Clearly as K\_{max} increases, the synthesized signal becomes
+Clearly as $K_{max}$ increases, the synthesized signal becomes
 more similar to the original.
 
 \includegraphics[width=\textwidth]{squarewaves.png}
@@ -241,13 +241,13 @@ more similar to the original.
 
 The plots didn't demonstrate the phenomenon enough,
 so we wrote a script to generate a video of the synthesized signal
-as k\_{max} increases.\\
+as $k_{max}$ increases.\\
 
-When K\_{max} is less than 500, the Gibbs phenomenon is clear.
+When $K_{max}$ is less than 500, the Gibbs phenomenon is clear.
 The signal rings (overshoots and undershoots) at sharp transitions.\\
 
-Between K\_{max} = 400 and K\_{max} = 500, the ringing decreases.
-When K\_{max} rises above 500, the Gibbs phenomenon disappears.
+Between $K_{max}$ = 400 and $K_{max}$ = 500, the ringing decreases.
+When $K_{max}$ rises above 500, the Gibbs phenomenon disappears.
 After that it appears again; then it disappears again; 
 then it appears again, and the process repeats.
 
